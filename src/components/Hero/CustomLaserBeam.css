@@ -1,0 +1,1315 @@
+/* Container for the entire laser effect */
+.custom-laser-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 1;
+}
+
+/* Full-screen moving fog overlay */
+.full-screen-fog {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.fog-overlay {
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  right: -10%;
+  bottom: -10%;
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle at 50% 50%,
+    rgba(81, 80, 247, 0.03) 0%,
+    rgba(81, 80, 247, 0.05) 20%,
+    rgba(81, 80, 247, 0.08) 40%,
+    rgba(81, 80, 247, 0.05) 60%,
+    rgba(81, 80, 247, 0.03) 80%,
+    rgba(81, 80, 247, 0) 100%
+  );
+  filter: blur(60px);
+  mix-blend-mode: screen;
+}
+
+.fog-overlay-1 {
+  animation: fogDrift1 50s ease-in-out infinite;
+  opacity: 0.6;
+}
+
+.fog-overlay-2 {
+  animation: fogDrift2 40s ease-in-out infinite;
+  animation-delay: -15s;
+  opacity: 0.5;
+}
+
+.fog-overlay-3 {
+  animation: fogDrift3 35s ease-in-out infinite;
+  animation-delay: -25s;
+  opacity: 0.4;
+  filter: blur(80px);
+}
+
+/* Laser Beam Wrapper - positioned on the right side */
+.laser-beam-wrapper {
+  position: absolute;
+  right: 15%;
+  top: 0;
+  height: 100%;
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+/* Main Laser Beam - extended to reach into pool */
+.laser-beam {
+  position: relative;
+  width: 4px;
+  height: calc(100% + 100px);
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* Core beam - BRIGHT WHITE center line consistently throughout */
+.beam-core {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, 
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 1) 3%,
+    rgba(255, 255, 255, 1) 10%,
+    rgba(255, 255, 255, 0.95) 20%,
+    rgba(255, 255, 255, 0.95) 80%,
+    rgba(255, 255, 255, 0.9) 90%,
+    rgba(255, 255, 255, 0.7) 97%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  box-shadow: 0 0 10px 3px rgba(255, 255, 255, 0.8),
+              0 0 20px 5px rgba(240, 26, 174, 0.6);
+  z-index: 200;
+}
+
+/* Glow layers for depth and volume with pink color */
+.beam-glow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  filter: blur(8px);
+}
+
+.glow-layer-1 {
+  width: 6px;
+  background: linear-gradient(180deg, 
+    rgba(240, 26, 174, 0) 0%,
+    rgba(240, 26, 174, 0.8) 10%,
+    rgba(240, 26, 174, 0.9) 50%,
+    rgba(240, 26, 174, 0.8) 90%,
+    rgba(240, 26, 174, 0) 100%
+  );
+  z-index: 190;
+}
+
+.glow-layer-2 {
+  width: 12px;
+  background: linear-gradient(180deg, 
+    rgba(240, 26, 174, 0) 0%,
+    rgba(240, 26, 174, 0.6) 10%,
+    rgba(240, 26, 174, 0.7) 50%,
+    rgba(240, 26, 174, 0.6) 90%,
+    rgba(240, 26, 174, 0) 100%
+  );
+  filter: blur(12px);
+  z-index: 180;
+}
+
+.glow-layer-3 {
+  width: 24px;
+  background: linear-gradient(180deg, 
+    rgba(240, 26, 174, 0) 0%,
+    rgba(240, 26, 174, 0.4) 10%,
+    rgba(240, 26, 174, 0.5) 50%,
+    rgba(240, 26, 174, 0.4) 90%,
+    rgba(240, 26, 174, 0) 100%
+  );
+  filter: blur(20px);
+  z-index: 170;
+}
+
+.glow-layer-4 {
+  width: 40px;
+  background: linear-gradient(180deg, 
+    rgba(240, 26, 174, 0) 0%,
+    rgba(240, 26, 174, 0.2) 10%,
+    rgba(240, 26, 174, 0.3) 50%,
+    rgba(240, 26, 174, 0.2) 90%,
+    rgba(240, 26, 174, 0) 100%
+  );
+  filter: blur(30px);
+  z-index: 160;
+}
+
+/* Animated fog layers for the beam - ULTRA DRAMATIC AND MASSIVE */
+.beam-fog {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 100%;
+  background: linear-gradient(180deg, 
+    rgba(240, 26, 174, 0) 0%,
+    rgba(240, 26, 174, 0.04) 20%,
+    rgba(240, 26, 174, 0.06) 50%,
+    rgba(240, 26, 174, 0.04) 80%,
+    rgba(240, 26, 174, 0) 100%
+  );
+  filter: blur(50px);
+  z-index: 1;
+}
+
+.fog-layer-1 {
+  animation: fogMove1 6s ease-in-out infinite;
+  opacity: 0.4;
+  width: 180px;
+}
+
+.fog-layer-2 {
+  width: 220px;
+  animation: fogMove2 5s ease-in-out infinite;
+  animation-delay: -2s;
+  opacity: 0.35;
+}
+
+.fog-layer-3 {
+  width: 260px;
+  opacity: 0.3;
+  animation: fogMove3 7s ease-in-out infinite;
+  animation-delay: -4s;
+}
+
+/* Fog on the sides of the beam - ULTRA MASSIVE SPREAD */
+.beam-fog-side {
+  position: absolute;
+  top: 0;
+  width: 140px;
+  height: 100%;
+  background: linear-gradient(180deg, 
+    rgba(240, 26, 174, 0) 0%,
+    rgba(240, 26, 174, 0.04) 25%,
+    rgba(240, 26, 174, 0.06) 50%,
+    rgba(240, 26, 174, 0.04) 75%,
+    rgba(240, 26, 174, 0) 100%
+  );
+  filter: blur(45px);
+  z-index: 1;
+}
+
+.fog-side-left {
+  left: -110px;
+  animation: fogSideLeft 4s ease-in-out infinite;
+  opacity: 0.35;
+}
+
+.fog-side-right {
+  right: -110px;
+  animation: fogSideRight 4s ease-in-out infinite;
+  animation-delay: -2s;
+  opacity: 0.35;
+}
+
+/* Rising steam/vapor effects along the beam - FAR BENEATH with much lower opacity */
+.beam-steam {
+  position: absolute;
+  left: 50%;
+  width: 30px;
+  height: 80px;
+  background: radial-gradient(ellipse at center,
+    rgba(240, 26, 174, 0.04) 0%,
+    rgba(240, 26, 174, 0.02) 50%,
+    rgba(240, 26, 174, 0) 100%
+  );
+  filter: blur(20px);
+  transform: translateX(-50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.steam-1 {
+  animation: steamRise1 4s ease-in-out infinite;
+}
+
+.steam-2 {
+  animation: steamRise2 5s ease-in-out infinite;
+  animation-delay: -1s;
+  width: 35px;
+}
+
+.steam-3 {
+  animation: steamRise3 4.5s ease-in-out infinite;
+  animation-delay: -2s;
+  width: 28px;
+}
+
+.steam-4 {
+  animation: steamRise4 5.5s ease-in-out infinite;
+  animation-delay: -3s;
+  width: 32px;
+}
+
+.steam-5 {
+  animation: steamRise5 4.8s ease-in-out infinite;
+  animation-delay: -1.5s;
+  width: 30px;
+}
+
+.steam-6 {
+  animation: steamRise6 5.2s ease-in-out infinite;
+  animation-delay: -2.5s;
+  width: 33px;
+}
+
+/* Multi-layer pulse - White core (innermost) - expands horizontally at 60% */
+.beam-pulse-core {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 50px;
+  background: radial-gradient(ellipse at center, 
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.95) 30%,
+    rgba(255, 255, 255, 0.7) 60%,
+    rgba(255, 255, 255, 0.3) 80%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  filter: blur(8px);
+  animation: pulseGitter 0.15s ease-in-out infinite;
+  transform-origin: center center;
+  z-index: 300;
+  pointer-events: none;
+}
+
+/* Multi-layer pulse - Blue middle layer - expands horizontally at 60% */
+.beam-pulse-middle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 75px;
+  background: radial-gradient(ellipse at center, 
+    rgba(81, 80, 247, 0.9) 0%,
+    rgba(81, 80, 247, 0.85) 25%,
+    rgba(81, 80, 247, 0.7) 45%,
+    rgba(81, 80, 247, 0.5) 65%,
+    rgba(81, 80, 247, 0.2) 85%,
+    rgba(81, 80, 247, 0) 100%
+  );
+  filter: blur(15px);
+  animation: pulseGitterSlow 0.2s ease-in-out infinite;
+  transform-origin: center center;
+  z-index: 290;
+  pointer-events: none;
+}
+
+/* Multi-layer pulse - Outer blue glow - expands horizontally at 60% */
+.beam-pulse-outer {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: 100px;
+  background: radial-gradient(ellipse at center, 
+    rgba(81, 80, 247, 0.7) 0%,
+    rgba(81, 80, 247, 0.6) 20%,
+    rgba(81, 80, 247, 0.5) 40%,
+    rgba(81, 80, 247, 0.35) 60%,
+    rgba(81, 80, 247, 0.15) 80%,
+    rgba(81, 80, 247, 0) 100%
+  );
+  filter: blur(25px);
+  animation: pulseGitterSubtle 0.25s ease-in-out infinite;
+  transform-origin: center center;
+  z-index: 280;
+  pointer-events: none;
+}
+
+/* Bottom Pool Container - LEFT curved, RIGHT flat */
+.bottom-pool-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: visible;
+  border-radius: 50% 0 0 0 / 40px 0 0 0;
+}
+
+/* White core layer - LEFT curved, RIGHT flat */
+.pool-core-white {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 40px;
+  background: 
+    radial-gradient(ellipse 25% 40px at 85% bottom,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.95) 15%,
+      rgba(255, 255, 255, 0.85) 35%,
+      rgba(255, 255, 255, 0.6) 60%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.4) 15%,
+      rgba(255, 255, 255, 0.65) 35%,
+      rgba(255, 255, 255, 0.75) 50%,
+      rgba(255, 255, 255, 0.65) 65%,
+      rgba(255, 255, 255, 0.4) 85%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  filter: blur(15px);
+  animation: poolCoreTurbulence 4s ease-in-out infinite;
+  mix-blend-mode: screen;
+  border-radius: 100% 0 0 0 / 40px 0 0 0;
+  z-index: 500;
+}
+
+/* White merge layer - LEFT curved, RIGHT flat */
+.pool-beam-merge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 35px;
+  background: 
+    radial-gradient(ellipse 20% 35px at 85% bottom,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.9) 20%,
+      rgba(255, 255, 255, 0.7) 45%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.35) 20%,
+      rgba(255, 255, 255, 0.55) 40%,
+      rgba(255, 255, 255, 0.55) 60%,
+      rgba(255, 255, 255, 0.35) 80%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  filter: blur(20px);
+  animation: poolMergeTurbulence 5s ease-in-out infinite;
+  mix-blend-mode: screen;
+  border-radius: 100% 0 0 0 / 35px 0 0 0;
+  z-index: 490;
+}
+
+/* Blue outer glow - LEFT curved, RIGHT flat */
+.pool-glow-main {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 70px;
+  background: 
+    radial-gradient(ellipse 30% 70px at 85% bottom,
+      rgba(255, 255, 255, 0.7) 0%,
+      rgba(81, 80, 247, 0.95) 25%,
+      rgba(81, 80, 247, 0.8) 50%,
+      rgba(81, 80, 247, 0) 100%
+    ),
+    linear-gradient(90deg,
+      rgba(81, 80, 247, 0.65) 0%,
+      rgba(81, 80, 247, 0.75) 20%,
+      rgba(81, 80, 247, 0.85) 40%,
+      rgba(81, 80, 247, 0.85) 60%,
+      rgba(81, 80, 247, 0.75) 80%,
+      rgba(81, 80, 247, 0.65) 100%
+    );
+  filter: blur(25px);
+  animation: poolGlowTurbulence 4.5s ease-in-out infinite;
+  mix-blend-mode: screen;
+  border-radius: 100% 0 0 0 / 40px 0 0 0;
+  z-index: 480;
+}
+
+/* Atmospheric layer - LEFT curved, RIGHT flat */
+.pool-atmosphere {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 55px;
+  background: 
+    radial-gradient(ellipse 8% 55px at 85% bottom,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(81, 80, 247, 0.5) 70%,
+      rgba(81, 80, 247, 0) 100%
+    ),
+    linear-gradient(90deg,
+      rgba(81, 80, 247, 0.42) 0%,
+      rgba(81, 80, 247, 0.45) 50%,
+      rgba(81, 80, 247, 0.42) 100%
+    );
+  filter: blur(35px);
+  animation: poolAtmosphereTurbulence 7s ease-in-out infinite;
+  mix-blend-mode: screen;
+  border-radius: 50% 0 0 0 / 30px 0 0 0;
+  z-index: 460;
+}
+
+/* Secondary pool glow - blue with bright center */
+.pool-glow-secondary {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50px;
+  background: 
+    radial-gradient(ellipse 12% 50px at 85% bottom,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(81, 80, 247, 0.7) 60%,
+      rgba(81, 80, 247, 0) 100%
+    ),
+    linear-gradient(90deg,
+      rgba(81, 80, 247, 0.52) 0%,
+      rgba(81, 80, 247, 0.55) 50%,
+      rgba(81, 80, 247, 0.52) 100%
+    );
+  filter: blur(18px);
+  animation: poolGlowSecondaryTurbulence 5.5s ease-in-out infinite;
+  border-radius: 100% 0 0 0 / 35px 0 0 0;
+  z-index: 470;
+}
+
+/* Pool reflection effect - LEFT curved, RIGHT flat */
+.pool-reflection {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50px;
+  background: radial-gradient(ellipse 60% 60px at 85% bottom,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(81, 80, 247, 0.25) 20%,
+    rgba(81, 80, 247, 0.18) 40%,
+    rgba(81, 80, 247, 0.1) 60%,
+    rgba(81, 80, 247, 0) 100%
+  );
+  filter: blur(10px);
+  animation: poolShimmer 2s ease-in-out infinite;
+  border-radius: 50% 0 0 0 / 35px 0 0 0;
+  z-index: 465;
+}
+
+/* Light rays - LEFT curved, RIGHT flat */
+.pool-light-rays {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 65px;
+  background: radial-gradient(ellipse 40% 65px at 85% bottom,
+    rgba(81, 80, 247, 0.25) 0%,
+    rgba(81, 80, 247, 0.15) 30%,
+    rgba(81, 80, 247, 0.08) 50%,
+    rgba(81, 80, 247, 0) 70%
+  );
+  filter: blur(25px);
+  animation: poolLightRaysTurbulence 6s ease-in-out infinite;
+  border-radius: 50% 0 0 0 / 30px 0 0 0;
+  z-index: 462;
+}
+
+/* White splash - matches bottom pool structure (LEFT curved, RIGHT flat) */
+.pool-splash-white {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 70px;
+  background: 
+    radial-gradient(ellipse 20% 70px at 85% center,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.95) 15%,
+      rgba(255, 255, 255, 0.85) 30%,
+      rgba(255, 255, 255, 0.65) 50%,
+      rgba(255, 255, 255, 0.4) 70%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.35) 15%,
+      rgba(255, 255, 255, 0.55) 30%,
+      rgba(255, 255, 255, 0.7) 50%,
+      rgba(255, 255, 255, 0.65) 65%,
+      rgba(255, 255, 255, 0.45) 80%,
+      rgba(255, 255, 255, 0.2) 90%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  filter: blur(20px);
+  pointer-events: none;
+  border-radius: 100% 0 0 0 / 60px 0 0 0;
+  z-index: 517;
+}
+
+/* Blue glow splash - outer layer around white */
+.pool-splash-main {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 85px;
+  background: 
+    radial-gradient(ellipse 18% 85px at 85% center,
+      rgba(255, 255, 255, 0.7) 0%,
+      rgba(81, 80, 247, 0.95) 15%,
+      rgba(81, 80, 247, 0.85) 35%,
+      rgba(81, 80, 247, 0.6) 60%,
+      rgba(81, 80, 247, 0) 100%
+    ),
+    radial-gradient(ellipse 90% 75px at 85% center,
+      rgba(81, 80, 247, 0.9) 0%,
+      rgba(81, 80, 247, 0.75) 20%,
+      rgba(81, 80, 247, 0.5) 45%,
+      rgba(81, 80, 247, 0.25) 70%,
+      rgba(81, 80, 247, 0) 100%
+    ),
+    linear-gradient(90deg,
+      rgba(81, 80, 247, 0) 0%,
+      rgba(81, 80, 247, 0.35) 15%,
+      rgba(81, 80, 247, 0.6) 35%,
+      rgba(81, 80, 247, 0.75) 55%,
+      rgba(81, 80, 247, 0.6) 75%,
+      rgba(81, 80, 247, 0.35) 90%,
+      rgba(81, 80, 247, 0) 100%
+    );
+  filter: blur(25px);
+  pointer-events: none;
+  border-radius: 100% 0 0 0 / 65px 0 0 0;
+  z-index: 516;
+}
+
+@keyframes scatterPulse {
+  0% {
+    filter: blur(15px) brightness(1.5);
+  }
+  30% {
+    filter: blur(35px) brightness(1.2);
+  }
+  100% {
+    filter: blur(28px) brightness(1);
+  }
+}
+
+/* Blue wave splash - widest outer layer */
+.pool-splash-wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 110px;
+  background: 
+    radial-gradient(ellipse 22% 110px at 85% center,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(81, 80, 247, 0.9) 18%,
+      rgba(81, 80, 247, 0.75) 40%,
+      rgba(81, 80, 247, 0.5) 65%,
+      rgba(81, 80, 247, 0) 100%
+    ),
+    radial-gradient(ellipse 110% 95px at 85% center,
+      rgba(81, 80, 247, 0.85) 0%,
+      rgba(81, 80, 247, 0.7) 25%,
+      rgba(81, 80, 247, 0.5) 50%,
+      rgba(81, 80, 247, 0.25) 75%,
+      rgba(81, 80, 247, 0) 100%
+    ),
+    linear-gradient(90deg,
+      rgba(81, 80, 247, 0) 0%,
+      rgba(81, 80, 247, 0.3) 10%,
+      rgba(81, 80, 247, 0.55) 25%,
+      rgba(81, 80, 247, 0.7) 45%,
+      rgba(81, 80, 247, 0.7) 65%,
+      rgba(81, 80, 247, 0.5) 80%,
+      rgba(81, 80, 247, 0.3) 92%,
+      rgba(81, 80, 247, 0) 100%
+    );
+  filter: blur(40px);
+  pointer-events: none;
+  border-radius: 100% 0 0 0 / 70px 0 0 0;
+  z-index: 515;
+}
+
+@keyframes scatterWave {
+  0% {
+    filter: blur(25px) brightness(1.3);
+  }
+  40% {
+    filter: blur(55px) brightness(1.15);
+  }
+  100% {
+    filter: blur(45px) brightness(1);
+  }
+}
+
+/* Animations */
+/* Multiple fog movement patterns - MAXIMUM CHAOS TURBULENT STORM */
+@keyframes fogMove1 {
+  0% {
+    opacity: 0.7;
+    transform: translateX(-50%) translateY(0) scaleY(1) scaleX(1) rotate(0deg) skewX(0deg);
+    filter: blur(50px);
+  }
+  15% {
+    opacity: 0.9;
+    transform: translateX(-50%) translateY(-70px) scaleY(1.8) scaleX(2.0) rotate(18deg) skewX(8deg);
+    filter: blur(65px);
+  }
+  30% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-120px) scaleY(2.8) scaleX(3.2) rotate(-10deg) skewX(-12deg);
+    filter: blur(85px);
+  }
+  45% {
+    opacity: 0.6;
+    transform: translateX(-50%) translateY(50px) scaleY(0.5) scaleX(0.4) rotate(25deg) skewX(15deg);
+    filter: blur(40px);
+  }
+  60% {
+    opacity: 0.85;
+    transform: translateX(-50%) translateY(-90px) scaleY(2.3) scaleX(2.7) rotate(-20deg) skewX(-10deg);
+    filter: blur(75px);
+  }
+  80% {
+    opacity: 0.5;
+    transform: translateX(-50%) translateY(100px) scaleY(0.35) scaleX(0.25) rotate(12deg) skewX(6deg);
+    filter: blur(35px);
+  }
+  100% {
+    opacity: 0.7;
+    transform: translateX(-50%) translateY(0) scaleY(1) scaleX(1) rotate(0deg) skewX(0deg);
+    filter: blur(50px);
+  }
+}
+
+@keyframes fogMove2 {
+  0% {
+    opacity: 0.6;
+    transform: translateX(-50%) translateY(0) scaleY(1) scaleX(1) rotate(0deg) skewY(0deg);
+    filter: blur(55px);
+  }
+  20% {
+    opacity: 0.95;
+    transform: translateX(-50%) translateY(90px) scaleY(2.5) scaleX(2.9) rotate(-22deg) skewY(10deg);
+    filter: blur(80px);
+  }
+  35% {
+    opacity: 0.5;
+    transform: translateX(-50%) translateY(-80px) scaleY(0.4) scaleX(0.3) rotate(16deg) skewY(-8deg);
+    filter: blur(42px);
+  }
+  55% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(130px) scaleY(3.0) scaleX(3.5) rotate(-18deg) skewY(14deg);
+    filter: blur(95px);
+  }
+  70% {
+    opacity: 0.45;
+    transform: translateX(-50%) translateY(-110px) scaleY(0.3) scaleX(0.2) rotate(20deg) skewY(-12deg);
+    filter: blur(38px);
+  }
+  90% {
+    opacity: 0.8;
+    transform: translateX(-50%) translateY(60px) scaleY(1.9) scaleX(2.2) rotate(-8deg) skewY(5deg);
+    filter: blur(68px);
+  }
+  100% {
+    opacity: 0.6;
+    transform: translateX(-50%) translateY(0) scaleY(1) scaleX(1) rotate(0deg) skewY(0deg);
+    filter: blur(55px);
+  }
+}
+
+@keyframes fogMove3 {
+  0% {
+    opacity: 0.5;
+    transform: translateX(-50%) translateY(0) scaleY(1) scaleX(1) rotate(0deg) skewX(0deg) skewY(0deg);
+    filter: blur(60px);
+  }
+  12% {
+    opacity: 0.75;
+    transform: translateX(-50%) translateY(-95px) scaleY(2.4) scaleX(2.8) rotate(25deg) skewX(10deg) skewY(-8deg);
+    filter: blur(82px);
+  }
+  28% {
+    opacity: 0.4;
+    transform: translateX(-50%) translateY(85px) scaleY(0.4) scaleX(0.3) rotate(-15deg) skewX(-12deg) skewY(10deg);
+    filter: blur(45px);
+  }
+  42% {
+    opacity: 0.9;
+    transform: translateX(-50%) translateY(-140px) scaleY(3.2) scaleX(3.8) rotate(30deg) skewX(15deg) skewY(-15deg);
+    filter: blur(100px);
+  }
+  58% {
+    opacity: 0.55;
+    transform: translateX(-50%) translateY(70px) scaleY(0.6) scaleX(0.5) rotate(-20deg) skewX(-8deg) skewY(12deg);
+    filter: blur(48px);
+  }
+  75% {
+    opacity: 0.85;
+    transform: translateX(-50%) translateY(-100px) scaleY(2.7) scaleX(3.1) rotate(18deg) skewX(12deg) skewY(-10deg);
+    filter: blur(88px);
+  }
+  92% {
+    opacity: 0.6;
+    transform: translateX(-50%) translateY(55px) scaleY(0.35) scaleX(0.25) rotate(-12deg) skewX(-6deg) skewY(8deg);
+    filter: blur(42px);
+  }
+  100% {
+    opacity: 0.5;
+    transform: translateX(-50%) translateY(0) scaleY(1) scaleX(1) rotate(0deg) skewX(0deg) skewY(0deg);
+    filter: blur(60px);
+  }
+}
+
+/* Side fog animations - ULTRA TURBULENT CHAOS */
+@keyframes fogSideLeft {
+  0% {
+    opacity: 0.6;
+    transform: translateX(0) translateY(0) scale(1) rotate(0deg) scaleY(1) skewX(0deg);
+  }
+  14% {
+    opacity: 0.85;
+    transform: translateX(-80px) translateY(-85px) scale(2.5) rotate(-28deg) scaleY(2.3) skewX(-15deg);
+  }
+  28% {
+    opacity: 0.95;
+    transform: translateX(-120px) translateY(-130px) scale(3.2) rotate(-35deg) scaleY(3.0) skewX(-22deg);
+  }
+  42% {
+    opacity: 0.4;
+    transform: translateX(75px) translateY(110px) scale(0.3) rotate(22deg) scaleY(0.25) skewX(18deg);
+  }
+  56% {
+    opacity: 0.9;
+    transform: translateX(-100px) translateY(-90px) scale(2.8) rotate(-18deg) scaleY(2.5) skewX(-12deg);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(-90px) translateY(-120px) scale(3.0) rotate(-30deg) scaleY(2.8) skewX(-20deg);
+  }
+  84% {
+    opacity: 0.5;
+    transform: translateX(65px) translateY(95px) scale(0.4) rotate(16deg) scaleY(0.35) skewX(14deg);
+  }
+  100% {
+    opacity: 0.6;
+    transform: translateX(0) translateY(0) scale(1) rotate(0deg) scaleY(1) skewX(0deg);
+  }
+}
+
+@keyframes fogSideRight {
+  0% {
+    opacity: 0.6;
+    transform: translateX(0) translateY(0) scale(1) rotate(0deg) scaleY(1) skewX(0deg);
+  }
+  16% {
+    opacity: 0.9;
+    transform: translateX(85px) translateY(90px) scale(2.6) rotate(30deg) scaleY(2.4) skewX(16deg);
+  }
+  32% {
+    opacity: 1;
+    transform: translateX(125px) translateY(140px) scale(3.3) rotate(38deg) scaleY(3.1) skewX(24deg);
+  }
+  48% {
+    opacity: 0.35;
+    transform: translateX(-70px) translateY(-115px) scale(0.28) rotate(-24deg) scaleY(0.22) skewX(-20deg);
+  }
+  64% {
+    opacity: 0.95;
+    transform: translateX(105px) translateY(95px) scale(2.9) rotate(20deg) scaleY(2.6) skewX(14deg);
+  }
+  80% {
+    opacity: 0.45;
+    transform: translateX(-65px) translateY(-85px) scale(0.4) rotate(-18deg) scaleY(0.32) skewX(-16deg);
+  }
+  92% {
+    opacity: 0.8;
+    transform: translateX(95px) translateY(105px) scale(2.7) rotate(26deg) scaleY(2.5) skewX(12deg);
+  }
+  100% {
+    opacity: 0.6;
+    transform: translateX(0) translateY(0) scale(1) rotate(0deg) scaleY(1) skewX(0deg);
+  }
+}
+
+/* Pulse gitter effects for realistic energy feel */
+@keyframes pulseGitter {
+  0%, 100% {
+    filter: blur(8px) brightness(1);
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    filter: blur(9px) brightness(1.1);
+    transform: translateX(-50%) scale(1.02);
+  }
+}
+
+@keyframes pulseGitterSlow {
+  0%, 100% {
+    filter: blur(15px) brightness(1);
+    opacity: 1;
+  }
+  50% {
+    filter: blur(16px) brightness(1.05);
+    opacity: 0.95;
+  }
+}
+
+@keyframes pulseGitterSubtle {
+  0%, 100% {
+    filter: blur(25px) brightness(1);
+    opacity: 1;
+  }
+  50% {
+    filter: blur(26px) brightness(1.03);
+    opacity: 0.98;
+  }
+}
+
+/* Full-screen fog drift animations */
+@keyframes fogDrift1 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translate(-5%, 3%) rotate(2deg) scale(1.05);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(3%, -2%) rotate(-1deg) scale(1.02);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translate(-2%, 5%) rotate(1deg) scale(1.08);
+    opacity: 0.65;
+  }
+}
+
+@keyframes fogDrift2 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.5;
+  }
+  33% {
+    transform: translate(4%, -4%) rotate(-2deg) scale(1.06);
+    opacity: 0.6;
+  }
+  66% {
+    transform: translate(-3%, 3%) rotate(1deg) scale(1.03);
+    opacity: 0.45;
+  }
+}
+
+@keyframes fogDrift3 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.4;
+  }
+  40% {
+    transform: translate(-4%, 4%) rotate(3deg) scale(1.1);
+    opacity: 0.55;
+  }
+  80% {
+    transform: translate(3%, -3%) rotate(-2deg) scale(1.04);
+    opacity: 0.35;
+  }
+}
+
+/* Beam merge glow animation */
+@keyframes beamMergeGlow {
+  0%, 100% {
+    opacity: 0.8;
+    transform: translateX(50%) scale(1);
+    filter: blur(40px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(50%) scale(1.15);
+    filter: blur(45px);
+  }
+}
+
+/* Atmosphere pulse */
+@keyframes atmospherePulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+/* Rising steam animations along the y-axis */
+@keyframes steamRise1 {
+  0% {
+    bottom: 0;
+    opacity: 0;
+    transform: translateX(-50%) translateX(0px) scale(0.8);
+  }
+  10% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateX(-50%) translateX(5px) scale(1);
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    bottom: 100%;
+    opacity: 0;
+    transform: translateX(-50%) translateX(-8px) scale(1.3);
+  }
+}
+
+@keyframes steamRise2 {
+  0% {
+    bottom: 0;
+    opacity: 0;
+    transform: translateX(-50%) translateX(0px) scale(0.7);
+  }
+  15% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateX(-50%) translateX(-6px) scale(1.1);
+  }
+  85% {
+    opacity: 0.4;
+  }
+  100% {
+    bottom: 100%;
+    opacity: 0;
+    transform: translateX(-50%) translateX(10px) scale(1.4);
+  }
+}
+
+@keyframes steamRise3 {
+  0% {
+    bottom: 0;
+    opacity: 0;
+    transform: translateX(-50%) translateX(0px) scale(0.9);
+  }
+  12% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.65;
+    transform: translateX(-50%) translateX(7px) scale(1.05);
+  }
+  88% {
+    opacity: 0.35;
+  }
+  100% {
+    bottom: 100%;
+    opacity: 0;
+    transform: translateX(-50%) translateX(-5px) scale(1.35);
+  }
+}
+
+@keyframes steamRise4 {
+  0% {
+    bottom: 0;
+    opacity: 0;
+    transform: translateX(-50%) translateX(0px) scale(0.85);
+  }
+  8% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateX(-50%) translateX(-8px) scale(1);
+  }
+  92% {
+    opacity: 0.25;
+  }
+  100% {
+    bottom: 100%;
+    opacity: 0;
+    transform: translateX(-50%) translateX(6px) scale(1.3);
+  }
+}
+
+@keyframes steamRise5 {
+  0% {
+    bottom: 0;
+    opacity: 0;
+    transform: translateX(-50%) translateX(0px) scale(0.75);
+  }
+  10% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateX(-50%) translateX(4px) scale(1.08);
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    bottom: 100%;
+    opacity: 0;
+    transform: translateX(-50%) translateX(-7px) scale(1.4);
+  }
+}
+
+@keyframes steamRise6 {
+  0% {
+    bottom: 0;
+    opacity: 0;
+    transform: translateX(-50%) translateX(0px) scale(0.8);
+  }
+  14% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.65;
+    transform: translateX(-50%) translateX(-5px) scale(1.02);
+  }
+  86% {
+    opacity: 0.35;
+  }
+  100% {
+    bottom: 100%;
+    opacity: 0;
+    transform: translateX(-50%) translateX(9px) scale(1.38);
+  }
+}
+
+@keyframes poolPulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes poolCoreTurbulence {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes poolMergeTurbulence {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+@keyframes poolGlowTurbulence {
+  0%, 100% {
+    transform: scale(1) translateY(0) skewX(0deg);
+    filter: blur(30px);
+  }
+  30% {
+    transform: scale(1.06) translateY(-2px) skewX(1deg);
+    filter: blur(35px);
+  }
+  60% {
+    transform: scale(0.96) translateY(2px) skewX(-1deg);
+    filter: blur(28px);
+  }
+}
+
+@keyframes poolAtmosphereTurbulence {
+  0%, 100% {
+    transform: scale(1) translateX(0) translateY(0);
+    filter: blur(50px);
+  }
+  25% {
+    transform: scale(1.1) translateX(-3px) translateY(-3px);
+    filter: blur(58px);
+  }
+  50% {
+    transform: scale(0.93) translateX(2px) translateY(2px);
+    filter: blur(45px);
+  }
+  75% {
+    transform: scale(1.05) translateX(-2px) translateY(-2px);
+    filter: blur(53px);
+  }
+}
+
+@keyframes poolGlowSecondaryTurbulence {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    filter: blur(20px);
+  }
+  33% {
+    transform: scale(1.08) rotate(1deg);
+    filter: blur(25px);
+  }
+  66% {
+    transform: scale(0.94) rotate(-1deg);
+    filter: blur(18px);
+  }
+}
+
+@keyframes poolLightRaysTurbulence {
+  0%, 100% {
+    transform: scale(1) translateY(0) skewY(0deg);
+    filter: blur(30px);
+    opacity: 1;
+  }
+  40% {
+    transform: scale(1.1) translateY(-3px) skewY(1deg);
+    filter: blur(38px);
+    opacity: 0.85;
+  }
+  80% {
+    transform: scale(0.95) translateY(2px) skewY(-1deg);
+    filter: blur(28px);
+    opacity: 0.9;
+  }
+}
+
+@keyframes poolShimmer {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+@keyframes raysPulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.15) rotate(8deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .laser-beam-wrapper {
+    right: 50%;
+    transform: translateX(50%);
+  }
+  
+  .pool-glow-main {
+    background: radial-gradient(ellipse 100% 180px at 50% bottom,
+      rgba(138, 43, 226, 0.5) 0%,
+      rgba(147, 51, 234, 0.4) 20%,
+      rgba(138, 43, 226, 0.3) 40%,
+      rgba(123, 104, 238, 0.15) 60%,
+      rgba(138, 43, 226, 0) 100%
+    );
+  }
+  
+  .pool-glow-secondary {
+    background: radial-gradient(ellipse 80% 150px at 50% bottom,
+      rgba(186, 85, 211, 0.3) 0%,
+      rgba(147, 51, 234, 0.25) 25%,
+      rgba(138, 43, 226, 0.2) 45%,
+      rgba(123, 104, 238, 0.12) 65%,
+      rgba(138, 43, 226, 0) 100%
+    );
+  }
+  
+  .pool-reflection {
+    background: radial-gradient(ellipse 60% 100px at 50% bottom,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(186, 85, 211, 0.25) 20%,
+      rgba(147, 51, 234, 0.18) 40%,
+      rgba(138, 43, 226, 0.1) 60%,
+      rgba(138, 43, 226, 0) 100%
+    );
+  }
+  
+  .pool-light-rays {
+    right: 50%;
+    transform: translateX(50%);
+  }
+  
+  .pool-splash-main,
+  .pool-splash-wave {
+    background: radial-gradient(ellipse 100% 100% at 50% top,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.8) 20%,
+      rgba(255, 255, 255, 0.6) 40%,
+      rgba(255, 255, 255, 0.4) 60%,
+      rgba(255, 255, 255, 0.2) 80%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+  
+  .pool-core-white {
+    background: radial-gradient(ellipse 30% 120px at 50% bottom,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(255, 255, 255, 0.4) 30%,
+      rgba(255, 255, 255, 0) 70%
+    );
+  }
+  
+  .pool-glow-main {
+    background: radial-gradient(ellipse 100% 180px at 50% bottom,
+      rgba(186, 85, 211, 0.6) 0%,
+      rgba(138, 43, 226, 0.5) 15%,
+      rgba(138, 43, 226, 0.3) 50%,
+      rgba(138, 43, 226, 0) 100%
+    );
+  }
+}
