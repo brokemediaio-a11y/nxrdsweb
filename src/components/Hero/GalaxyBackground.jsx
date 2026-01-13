@@ -32,8 +32,8 @@ const GalaxyBackground = () => {
         this.size = Math.random() * 1.1 + 0.7;
         
         // Movement speed: increased more
-        this.speedX = (Math.random() - 0.5) * 0.7; // -0.35 to 0.35
-        this.speedY = (Math.random() - 0.5) * 0.7;
+        this.speedX = (Math.random() - 0.5) * 1.3; // -0.35 to 0.35
+        this.speedY = (Math.random() - 0.5) * 1.3;
         
         // Opacity for twinkling: 0.5 to 0.8 (more visible)
         this.baseOpacity = Math.random() * 0.3 + 0.5;

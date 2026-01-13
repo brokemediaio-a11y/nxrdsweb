@@ -22,6 +22,13 @@ export default defineConfig({
         'text-primary': 'rgba(255,255,255,.92)',
         'text-muted': 'rgba(255,255,255,.62)',
         'border-line': 'rgba(255,255,255,.08)',
+        
+        // MVP Blocks compatibility
+        'foreground': 'rgba(255,255,255,.92)',
+        'muted-foreground': 'rgba(255,255,255,.62)',
+        'border': 'rgba(255,255,255,.08)',
+        'card': '#0f1116',
+        'background': '#000000',
       },
       fontFamily: {
         'azonix': ['Azonix', 'sans-serif'],
@@ -31,6 +38,8 @@ export default defineConfig({
         'twinkle-medium': 'twinkle 9s ease-in-out infinite',
         'twinkle-fast': 'twinkle 6s ease-in-out infinite',
         'pulse-nebula': 'pulse-nebula 15s ease-in-out infinite',
+        'marquee': 'marquee var(--duration) linear infinite',
+        'marquee-vertical': 'marquee-vertical var(--duration) linear infinite',
       },
       keyframes: {
         twinkle: {
@@ -40,6 +49,14 @@ export default defineConfig({
         'pulse-nebula': {
           '0%, 100%': { opacity: '0.6' },
           '50%': { opacity: '0.8' },
+        },
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(calc(-100% - var(--gap)))' },
+        },
+        'marquee-vertical': {
+          from: { transform: 'translateY(0)' },
+          to: { transform: 'translateY(calc(-100% - var(--gap)))' },
         },
       },
       backdropBlur: {
