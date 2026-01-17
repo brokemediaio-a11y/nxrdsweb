@@ -15,7 +15,11 @@ export default function Contact() {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [formRef, isInView] = useInView({ once: true, threshold: 0.3 });
+  const [formRef, isInView] = useInView({ 
+    once: true, 
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,12 +58,12 @@ export default function Contact() {
         }}
       />
 
-      <div className="relative z-10 container mx-auto px-4 md:px-6">
+      <div className="relative z-10 container mx-auto px-4 md:px-6" style={{ maxWidth: '1280px' }}>
         <div className={cn(
           'mx-auto max-w-5xl overflow-hidden rounded-[28px] border shadow-xl backdrop-blur-sm',
           'border-white/10 bg-white/5'
         )}>
-          <div className="grid md:grid-cols-2">
+          <div className="grid grid-cols-1 md:grid-cols-2">
             {/* Globe Container - First on Mobile, Second on Desktop */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
@@ -69,14 +73,16 @@ export default function Contact() {
             >
               <div className="flex flex-col items-center justify-center overflow-hidden">
                 <article className={cn(
-                  'relative mx-auto h-[350px] min-h-60 max-w-[450px] overflow-hidden rounded-3xl',
-                  'p-6 text-3xl tracking-tight text-white',
-                  'md:h-[450px] md:min-h-80 md:p-8 md:text-4xl md:leading-[1.05] lg:text-5xl',
+                  'relative mx-auto h-[450px] min-h-72 max-w-[500px] overflow-hidden rounded-3xl',
+                  'p-8 text-3xl tracking-tight text-white',
+                  'md:h-[550px] md:min-h-96 md:p-10 md:text-4xl md:leading-[1.05] lg:text-5xl',
                   'md:border md:border-white/20',
                   'md:bg-gradient-to-b md:from-accent-pink md:to-accent-pink/5',
                   'bg-transparent border-0'
                 )}>
-                  Powering the Next Order of Digital Experiences
+                  <div className="relative z-20 max-w-[280px] md:max-w-[350px]">
+                    Powering the Next Order of Digital Experiences
+                  </div>
                   <div className="absolute -right-20 -bottom-20 z-10 mx-auto flex h-full w-full max-w-[300px] items-center justify-center transition-all duration-700 hover:scale-105 md:-right-28 md:-bottom-28 md:max-w-[550px]">
                     <Earth
                       scale={1.1}
@@ -90,7 +96,7 @@ export default function Contact() {
             </motion.div>
 
             {/* Contact Form - Second on Mobile, First on Desktop */}
-            <div className="relative p-6 md:p-10 order-2 md:order-1" ref={formRef}>
+            <div className="relative p-4 sm:p-6 md:p-10 order-2 md:order-1" ref={formRef} style={{ width: '100%', maxWidth: '100%' }}>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={
@@ -127,8 +133,9 @@ export default function Contact() {
                 transition={{ duration: 0.5, delay: 0.3 }}
                 onSubmit={handleSubmit}
                 className="mt-8 space-y-6"
+                style={{ width: '100%' }}
               >
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
                   <motion.div
                     className="space-y-2"
                     initial={{ opacity: 0, y: 10 }}

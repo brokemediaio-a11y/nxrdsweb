@@ -4,12 +4,21 @@ import { fadeInLeft, fadeInUp } from '../../utils/animations';
 import Button from '../UI/Button';
 
 const HeroText = () => {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  
   return (
-    <div style={{ textAlign: 'left', maxWidth: '100%' }}>
+    <div style={{ textAlign: 'center', maxWidth: '100%', width: '100%' }}>
       {/* Main Title */}
       <motion.h1 
         className="hero-title"
-        style={{ textAlign: 'left', opacity: 1, transform: 'translateY(0)' }}
+        style={{ 
+          textAlign: 'center', 
+          opacity: 1, 
+          transform: 'translateY(0)',
+          marginBottom: isMobile ? '1rem' : '1.5rem',
+          marginLeft: 'auto',
+          marginRight: 'auto'
+        }}
         variants={fadeInLeft}
         initial="hidden"
         animate="visible"
@@ -24,7 +33,15 @@ const HeroText = () => {
       {/* Subtitle */}
       <motion.p 
         className="hero-subtitle"
-        style={{ textAlign: 'left', margin: '2rem 0 0 0', opacity: 1, transform: 'translateY(0)' }}
+        style={{ 
+          textAlign: 'center', 
+          margin: isMobile ? '1rem auto 0' : '2rem auto 0', 
+          opacity: 1, 
+          transform: 'translateY(0)',
+          maxWidth: '100%',
+          marginLeft: 'auto',
+          marginRight: 'auto'
+        }}
         variants={fadeInUp}
         initial="hidden"
         animate="visible"
@@ -36,7 +53,15 @@ const HeroText = () => {
       
       {/* CTA Button */}
       <motion.div
-        style={{ marginTop: '2rem', display: 'flex', gap: '12px', flexWrap: 'wrap', opacity: 1, transform: 'translateY(0)' }}
+        style={{ 
+          marginTop: isMobile ? '1.5rem' : '2rem', 
+          display: 'flex', 
+          gap: '12px', 
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          opacity: 1, 
+          transform: 'translateY(0)'
+        }}
         variants={fadeInUp}
         initial="hidden"
         animate="visible"
@@ -44,7 +69,7 @@ const HeroText = () => {
       >
         <Button 
           variant="primary"
-          size="lg"
+          size={isMobile ? "md" : "lg"}
           onClick={() => {
             const contactSection = document.querySelector('#contact');
             if (contactSection) {

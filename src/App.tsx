@@ -11,6 +11,8 @@ import Capabilities from './components/Sections/Capabilities';
 // @ts-ignore
 import ClientSpeak from './components/Sections/ClientSpeak';
 // @ts-ignore
+import AboutUs from './components/Sections/AboutUs';
+// @ts-ignore
 import Contact from './components/Sections/Contact';
 
 function App() {
@@ -48,6 +50,7 @@ function App() {
         <Hero />
         <Services />
         <Capabilities />
+        <AboutUs />
         <ClientSpeak />
         <Contact />
       </Layout>

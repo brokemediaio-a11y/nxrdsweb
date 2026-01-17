@@ -289,119 +289,121 @@ export default function ClientSpeak() {
   const column3 = testimonials.filter((_, i) => i % 3 === 2);
 
   return (
-    <section id="clients" className="relative container py-6 md:py-10 px-4 md:px-6">
+    <section id="clients" className="section" style={{ padding: '50px 0', position: 'relative' }}>
       {/* Decorative elements - Hidden on mobile for performance */}
       <div className="hidden md:block absolute top-20 -left-20 z-10 h-64 w-64 rounded-full bg-accent-pink/5 blur-3xl" />
       <div className="hidden md:block absolute -right-20 bottom-20 z-10 h-64 w-64 rounded-full bg-accent-pink/5 blur-3xl" />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h2 className="text-foreground mb-3 md:mb-4 text-center text-3xl md:text-4xl lg:text-5xl leading-[1.2] font-bold tracking-tighter px-2">
-          What Our Users Are Saying
-        </h2>
-        <h3 className="text-muted-foreground mx-auto mb-6 md:mb-8 max-w-lg text-center text-base md:text-lg font-medium tracking-tight text-balance px-2">
-          Don&apos;t just take our word for it. Here&apos;s what{' '}
-          <span className="bg-gradient-to-r from-accent-pink to-accent-magenta bg-clip-text text-transparent">
-            real clients
-          </span>{' '}
-          are saying about{' '}
-          <span className="font-semibold text-accent-pink">Nexordis</span>
-        </h3>
-      </motion.div>
+      <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 16px', position: 'relative', zIndex: 1 }}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-foreground mb-3 md:mb-4 text-center text-2xl md:text-4xl lg:text-5xl leading-[1.2] font-bold tracking-tighter px-2">
+            What Our Users Are Saying
+          </h2>
+          <h3 className="text-muted-foreground mx-auto mb-6 md:mb-8 max-w-lg text-center text-sm md:text-lg font-medium tracking-tight text-balance px-2">
+            Don&apos;t just take our word for it. Here&apos;s what{' '}
+            <span className="font-semibold" style={{ color: '#ec4899' }}>
+              real clients
+            </span>{' '}
+            are saying about{' '}
+            <span className="font-semibold text-accent-pink">Nexordis</span>
+          </h3>
+        </motion.div>
 
-      <div className="relative mt-4 md:mt-6 flex justify-center h-[500px] md:h-[600px] lg:h-[700px]">
-        {/* Mobile: Single Column with All Testimonials */}
-        <div className="block md:hidden w-full max-w-[90%] px-2">
-          <div className="h-full overflow-hidden relative" style={{ isolation: 'isolate' }}>
-            <Marquee
-              uniqueId="mobile-testimonials"
-              vertical={true}
-              pauseOnHover={true}
-              duration="80s"
-              repeat={4}
-            >
-              {testimonials.map((card, idx) => (
-                <TestimonialCard key={`mobile-${idx}`} {...card} />
-              ))}
-            </Marquee>
+        <div className="relative mt-4 md:mt-6 flex justify-center" style={{ height: '400px' }}>
+          {/* Mobile: Single Column with All Testimonials */}
+          <div className="block md:hidden w-full max-w-[90%] px-2">
+            <div className="h-full overflow-hidden relative" style={{ isolation: 'isolate' }}>
+              <Marquee
+                uniqueId="mobile-testimonials"
+                vertical={true}
+                pauseOnHover={true}
+                duration="80s"
+                repeat={4}
+              >
+                {testimonials.map((card, idx) => (
+                  <TestimonialCard key={`mobile-${idx}`} {...card} />
+                ))}
+              </Marquee>
+            </div>
           </div>
+
+          {/* Desktop/Tablet: 3 Column Grid Layout */}
+          <div className="hidden md:grid grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4 w-full max-w-[900px]">
+            {/* Column 1 - Fastest (42s) */}
+            <div 
+              key="testimonial-column-1"
+              className="h-full overflow-hidden relative"
+              style={{
+                isolation: 'isolate',
+              }}
+            >
+              <Marquee
+                key="marquee-col-1"
+                uniqueId="column-1-testimonials"
+                vertical={true}
+                pauseOnHover={true}
+                duration="42s"
+                repeat={4}
+              >
+                {column1.map((card, idx) => (
+                  <TestimonialCard key={`col1-${idx}`} {...card} />
+                ))}
+              </Marquee>
+            </div>
+
+            {/* Column 2 - Medium Speed (46s) */}
+            <div 
+              key="testimonial-column-2"
+              className="h-full overflow-hidden relative"
+              style={{
+                isolation: 'isolate',
+              }}
+            >
+              <Marquee
+                key="marquee-col-2"
+                uniqueId="column-2-testimonials"
+                vertical={true}
+                pauseOnHover={true}
+                duration="46s"
+                repeat={4}
+              >
+                {column2.map((card, idx) => (
+                  <TestimonialCard key={`col2-${idx}`} {...card} />
+                ))}
+              </Marquee>
+            </div>
+
+            {/* Column 3 - Slowest (60s) */}
+            <div 
+              key="testimonial-column-3"
+              className="h-full overflow-hidden relative"
+              style={{
+                isolation: 'isolate',
+              }}
+            >
+              <Marquee
+                key="marquee-col-3"
+                uniqueId="column-3-testimonials"
+                vertical={true}
+                pauseOnHover={true}
+                duration="60s"
+                repeat={4}
+              >
+                {column3.map((card, idx) => (
+                  <TestimonialCard key={`col3-${idx}`} {...card} />
+                ))}
+              </Marquee>
+            </div>
+          </div>
+
+          {/* Gradient Fade Effects */}
+          <div className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-1/4 w-full bg-gradient-to-t from-20%"></div>
+          <div className="from-background pointer-events-none absolute inset-x-0 top-0 h-1/4 w-full bg-gradient-to-b from-20%"></div>
         </div>
-
-        {/* Desktop/Tablet: 3 Column Grid Layout */}
-        <div className="hidden md:grid grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4 w-full max-w-[900px]">
-          {/* Column 1 - Fastest (42s) */}
-          <div 
-            key="testimonial-column-1"
-            className="h-full overflow-hidden relative"
-            style={{
-              isolation: 'isolate',
-            }}
-          >
-            <Marquee
-              key="marquee-col-1"
-              uniqueId="column-1-testimonials"
-              vertical={true}
-              pauseOnHover={true}
-              duration="42s"
-              repeat={4}
-            >
-              {column1.map((card, idx) => (
-                <TestimonialCard key={`col1-${idx}`} {...card} />
-              ))}
-            </Marquee>
-          </div>
-
-          {/* Column 2 - Medium Speed (46s) */}
-          <div 
-            key="testimonial-column-2"
-            className="h-full overflow-hidden relative"
-            style={{
-              isolation: 'isolate',
-            }}
-          >
-            <Marquee
-              key="marquee-col-2"
-              uniqueId="column-2-testimonials"
-              vertical={true}
-              pauseOnHover={true}
-              duration="46s"
-              repeat={4}
-            >
-              {column2.map((card, idx) => (
-                <TestimonialCard key={`col2-${idx}`} {...card} />
-              ))}
-            </Marquee>
-          </div>
-
-          {/* Column 3 - Slowest (60s) */}
-          <div 
-            key="testimonial-column-3"
-            className="h-full overflow-hidden relative"
-            style={{
-              isolation: 'isolate',
-            }}
-          >
-            <Marquee
-              key="marquee-col-3"
-              uniqueId="column-3-testimonials"
-              vertical={true}
-              pauseOnHover={true}
-              duration="60s"
-              repeat={4}
-            >
-              {column3.map((card, idx) => (
-                <TestimonialCard key={`col3-${idx}`} {...card} />
-              ))}
-            </Marquee>
-          </div>
-        </div>
-
-        {/* Gradient Fade Effects */}
-        <div className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-1/4 w-full bg-gradient-to-t from-20%"></div>
-        <div className="from-background pointer-events-none absolute inset-x-0 top-0 h-1/4 w-full bg-gradient-to-b from-20%"></div>
       </div>
     </section>
   );

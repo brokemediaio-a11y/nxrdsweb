@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Brain, Briefcase, Globe, Smartphone, Cloud } from 'lucide-react';
 import Button from '../UI/Button';
+import { SparklesCore } from '../UI/Sparkles';
 
 const Services = () => {
   const [activeTab, setActiveTab] = useState('agentic');
@@ -50,27 +51,52 @@ const Services = () => {
 
   const activeService = services[activeTab];
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  
   return (
     <section id="services" className="section">
-      <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
+      <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', padding: isMobile ? '0 16px' : '0 24px' }}>
         <div className="section-title">
           <div className="glow-dot"></div>
-          <h2>Our <span className="accent">Services</span></h2>
+          <div style={{ position: 'relative', width: 'fit-content' }}>
+            <h2>Our <span className="accent">Services</span></h2>
+            <SparklesCore
+              id="tsparticles-services"
+              background="transparent"
+              minSize={0.6}
+              maxSize={1.4}
+              particleDensity={500}
+              className="absolute inset-0 top-0 h-24 w-full"
+              particleColor="#ec4899"
+            />
+          </div>
         </div>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
+        <div style={{ 
+          display: 'flex', 
+          marginBottom: '24px', 
+          width: '100%'
+        }}>
           <div className="tabs services-tabs" role="tablist" style={{ 
             display: 'flex',
-            gap: '6px',
+            gap: isMobile ? '4px' : '6px',
             background: 'rgba(255, 255, 255, 0.06)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
-            padding: '8px',
-            borderRadius: '999px',
+            padding: isMobile ? '4px' : '6px',
+            borderRadius: isMobile ? '16px' : '999px',
             backdropFilter: 'blur(14px)',
             WebkitBackdropFilter: 'blur(14px)',
             boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.1)',
             position: 'relative',
-            overflow: 'hidden'
+            overflow: isMobile ? 'auto' : 'hidden',
+            flexWrap: isMobile ? 'wrap' : 'nowrap',
+            width: '100%',
+            justifyContent: 'flex-start',
+            alignItems: 'stretch',
+            flexShrink: 0,
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
           }}>
             {tabs.map((tab) => (
               <motion.button
@@ -83,15 +109,27 @@ const Services = () => {
                   border: 'none',
                   background: 'transparent',
                   color: activeTab === tab.id ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.7)',
-                  padding: '8px 18px',
+                  padding: isMobile ? '10px 8px' : '12px 16px',
                   borderRadius: '999px',
                   fontWeight: 600,
-                  fontSize: '14px',
+                  fontSize: isMobile ? '10px' : '13px',
                   fontFamily: "'Lemon Milk', sans-serif",
                   cursor: 'pointer',
                   transition: 'color 0.3s ease',
                   zIndex: 1,
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'normal',
+                  flex: '1 1 0',
+                  minWidth: 0,
+                  minHeight: isMobile ? '44px' : 'auto',
+                  height: 'auto',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  lineHeight: '1.3',
+                  textAlign: 'center',
+                  wordBreak: 'break-word',
+                  overflowWrap: 'break-word',
+                  hyphens: 'auto'
                 }}
                 whileHover={{ color: 'rgba(255, 255, 255, 0.95)' }}
               >
@@ -101,17 +139,18 @@ const Services = () => {
                     className="active-tab-bg"
                     style={{
                       position: 'absolute',
-                      top: '4px',
-                      left: '4px',
-                      right: '4px',
-                      bottom: '4px',
+                      top: isMobile ? '4px' : '6px',
+                      left: isMobile ? '4px' : '6px',
+                      right: isMobile ? '4px' : '6px',
+                      bottom: isMobile ? '4px' : '6px',
                       backdropFilter: 'blur(14px)',
                       WebkitBackdropFilter: 'blur(14px)',
                       background: 'rgba(255, 255, 255, 0.15)',
                       borderRadius: '999px',
                       border: '1px solid rgba(255, 255, 255, 0.25)',
                       boxShadow: '0 8px 32px 0 rgba(255, 255, 255, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
-                      zIndex: -1
+                      zIndex: -1,
+                      minHeight: 'calc(100% - 8px)'
                     }}
                     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                   />
@@ -119,21 +158,22 @@ const Services = () => {
                 <motion.div
                   layoutId={activeTab !== tab.id ? "hoverServiceTab" : undefined}
                   className={`tab-hover-glass ${activeTab === tab.id ? 'active-tab-hover' : ''}`}
-                  style={{
-                    position: 'absolute',
-                    top: '4px',
-                    left: '4px',
-                    right: '4px',
-                    bottom: '4px',
-                    backdropFilter: 'blur(14px)',
-                    WebkitBackdropFilter: 'blur(14px)',
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    borderRadius: '999px',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    zIndex: activeTab === tab.id ? -2 : -1,
-                    pointerEvents: 'none',
-                    opacity: 0
-                  }}
+                    style={{
+                      position: 'absolute',
+                      top: isMobile ? '4px' : '6px',
+                      left: isMobile ? '4px' : '6px',
+                      right: isMobile ? '4px' : '6px',
+                      bottom: isMobile ? '4px' : '6px',
+                      backdropFilter: 'blur(14px)',
+                      WebkitBackdropFilter: 'blur(14px)',
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      borderRadius: '999px',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      zIndex: activeTab === tab.id ? -2 : -1,
+                      pointerEvents: 'none',
+                      opacity: 0,
+                      minHeight: 'calc(100% - 8px)'
+                    }}
                   transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 />
                 <span style={{ position: 'relative', zIndex: 2 }}>
@@ -144,8 +184,13 @@ const Services = () => {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', position: 'relative' }}>
-          <div style={{ gridColumn: 'span 2', minHeight: '0' }}>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', 
+          gap: '16px', 
+          position: 'relative' 
+        }}>
+          <div style={{ gridColumn: isMobile ? 'span 1' : 'span 2', minHeight: '0' }}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
@@ -175,15 +220,31 @@ const Services = () => {
                     <div className="icon-bubble" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {activeService.icon}
                     </div>
-                    <h3 style={{ marginTop: '12px', marginBottom: '12px', fontSize: '1.5rem', fontWeight: 600 }}>
+                    <h3 style={{ 
+                      marginTop: '12px', 
+                      marginBottom: '12px', 
+                      fontSize: isMobile ? '1.25rem' : '1.5rem', 
+                      fontWeight: 600 
+                    }}>
                       {activeService.title}
                     </h3>
-                    <p style={{ color: 'var(--muted)', lineHeight: '1.75', margin: 0, fontSize: '15px' }}>
+                    <p style={{ 
+                      color: 'var(--muted)', 
+                      lineHeight: '1.75', 
+                      margin: 0, 
+                      fontSize: isMobile ? '0.9rem' : '15px' 
+                    }}>
                       {activeService.desc}
                     </p>
                   </div>
 
-                  <div style={{ marginTop: '24px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                  <div style={{ 
+                    marginTop: '24px', 
+                    display: 'flex', 
+                    gap: '12px', 
+                    flexWrap: 'wrap',
+                    flexDirection: isMobile ? 'column' : 'row'
+                  }}>
                     <Button
                       variant="primary"
                       size="md"

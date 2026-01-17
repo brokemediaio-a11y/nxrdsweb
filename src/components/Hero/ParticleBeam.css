@@ -1,0 +1,348 @@
+/* Particle Beam Container */
+.particle-beam-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 4;
+}
+
+/* ============================================
+   PHASE 1: INITIAL FORMATION (One-time, 3-4s)
+   ============================================ */
+
+.beam-formation {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 100%;
+  z-index: 4;
+}
+
+/* Core beam for formation */
+.beam-core-formation {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 0;
+  background: linear-gradient(180deg,
+    #ec4899 0%,
+    #f472b6 50%,
+    #ec4899 100%
+  );
+  box-shadow: 
+    0 0 10px rgba(236, 72, 153, 0.8),
+    0 0 20px rgba(244, 114, 182, 0.6),
+    0 0 30px rgba(236, 72, 153, 0.4);
+  filter: blur(2px);
+  animation: beamFormation 3.5s ease-out forwards;
+  z-index: 4;
+}
+
+/* Glow around formation beam */
+.beam-glow-formation {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 0;
+  background: radial-gradient(ellipse at center,
+    rgba(236, 72, 153, 0.6) 0%,
+    rgba(244, 114, 182, 0.4) 40%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  animation: beamFormation 3.5s ease-out forwards;
+  z-index: 3;
+}
+
+/* ============================================
+   PHASE 2: CONTINUOUS FALLING BEAM (Loop)
+   ============================================ */
+
+.beam-falling {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 100%;
+  z-index: 4;
+  animation-delay: 3.5s;
+  opacity: 0;
+  animation: beamFallingDelay 0.1s ease-out 3.5s forwards;
+}
+
+/* Core beam for falling (thinner) */
+.beam-core-falling {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 200px;
+  background: linear-gradient(180deg,
+    rgba(236, 72, 153, 0.9) 0%,
+    rgba(244, 114, 182, 0.8) 50%,
+    rgba(236, 72, 153, 0.9) 100%
+  );
+  box-shadow: 
+    0 0 8px rgba(236, 72, 153, 0.7),
+    0 0 15px rgba(244, 114, 182, 0.5);
+  filter: blur(1.5px);
+  animation: beamFalling 3.5s ease-in-out infinite;
+  z-index: 4;
+}
+
+/* Glow around falling beam */
+.beam-glow-falling {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 15px;
+  height: 200px;
+  background: radial-gradient(ellipse at center,
+    rgba(236, 72, 153, 0.5) 0%,
+    rgba(244, 114, 182, 0.3) 50%,
+    transparent 80%
+  );
+  filter: blur(6px);
+  animation: beamFalling 3.5s ease-in-out infinite;
+  z-index: 3;
+}
+
+/* ============================================
+   BOTTOM GLOW EFFECT (Pulsating)
+   ============================================ */
+
+.beam-bottom-glow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 300px;
+  z-index: 4;
+  opacity: 0;
+  animation: glowDelay 0.1s ease-out 3.5s forwards;
+}
+
+.glow-layer-1 {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 250px;
+  background: radial-gradient(ellipse 100% 250px at 50% bottom,
+    rgba(236, 72, 153, 0.8) 0%,
+    rgba(244, 114, 182, 0.6) 30%,
+    rgba(217, 70, 239, 0.4) 60%,
+    transparent 100%
+  );
+  filter: blur(40px);
+  animation: 
+    glowSpread 3.5s ease-out forwards,
+    glowPulse 2.5s ease-in-out infinite 3.5s;
+  z-index: 4;
+}
+
+.glow-layer-2 {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 200px;
+  background: radial-gradient(ellipse 90% 200px at 50% bottom,
+    rgba(244, 114, 182, 0.7) 0%,
+    rgba(236, 72, 153, 0.5) 40%,
+    rgba(217, 70, 239, 0.3) 70%,
+    transparent 100%
+  );
+  filter: blur(30px);
+  animation: 
+    glowSpread 3.5s ease-out forwards,
+    glowPulse 2.5s ease-in-out infinite 3.8s;
+  z-index: 4;
+}
+
+.glow-layer-3 {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 150px;
+  background: radial-gradient(ellipse 80% 150px at 50% bottom,
+    rgba(217, 70, 239, 0.6) 0%,
+    rgba(236, 72, 153, 0.4) 50%,
+    transparent 100%
+  );
+  filter: blur(20px);
+  animation: 
+    glowSpread 3.5s ease-out forwards,
+    glowPulse 2.5s ease-in-out infinite 4.1s;
+  z-index: 4;
+}
+
+/* ============================================
+   KEYFRAME ANIMATIONS
+   ============================================ */
+
+/* Phase 1: Beam Formation - travels down and spreads at bottom */
+@keyframes beamFormation {
+  0% {
+    height: 0;
+    opacity: 0;
+    width: 10px;
+  }
+  10% {
+    opacity: 1;
+    width: 10px;
+  }
+  85% {
+    height: 95%;
+    opacity: 1;
+    width: 10px;
+  }
+  90% {
+    height: 100%;
+    opacity: 1;
+    width: 10px;
+  }
+  95% {
+    height: 100%;
+    width: 10px;
+    opacity: 0.8;
+  }
+  100% {
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+}
+
+/* Phase 2: Beam Falling - continuous loop */
+@keyframes beamFalling {
+  0% {
+    top: -100px;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    top: calc(100% + 100px);
+    opacity: 0;
+  }
+}
+
+/* Delay animation to start falling beam after formation */
+@keyframes beamFallingDelay {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Bottom Glow Spread - triggered with beam formation */
+@keyframes glowSpread {
+  0% {
+    width: 0;
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+  85% {
+    width: 0;
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+  90% {
+    width: 50%;
+    opacity: 0.5;
+    transform: translateX(-50%);
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+}
+
+/* Bottom Glow Pulse - continuous breathing effect */
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1.05);
+  }
+}
+
+/* Delay for bottom glow to appear after Phase 1 */
+@keyframes glowDelay {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  .beam-core-formation,
+  .beam-glow-formation {
+    width: 8px;
+  }
+
+  .beam-core-falling {
+    width: 4px;
+    height: 150px;
+  }
+
+  .beam-glow-falling {
+    width: 12px;
+    height: 150px;
+  }
+
+  .beam-bottom-glow {
+    height: 250px;
+  }
+
+  .glow-layer-1 {
+    height: 200px;
+  }
+
+  .glow-layer-2 {
+    height: 150px;
+  }
+
+  .glow-layer-3 {
+    height: 100px;
+  }
+}
+

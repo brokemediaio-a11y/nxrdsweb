@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap');
+
+/* Azonix Font - Using CDN Fonts */
+@import url('https://fonts.cdnfonts.com/css/azonix');
 
 /* Custom Font Face for Lemon Milk */
 @font-face {
@@ -42,14 +46,94 @@
   --radius: 22px;
 }
 
-* { box-sizing: border-box; }
-html, body { height: 100%; }
+* { 
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body { 
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: "Lemon Milk", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: #000000;
   color: var(--text);
   overflow-x: hidden;
+  /* Performance optimizations */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+
+/* --- Custom Scrollbar - Pink Neon Laser Beam Style --- */
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, 
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 240, 255, 1) 10%,
+    rgba(255, 20, 147, 1) 30%,
+    rgba(236, 72, 153, 1) 50%,
+    rgba(217, 70, 239, 1) 70%,
+    rgba(255, 20, 147, 1) 90%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  border-radius: 4px;
+  box-shadow: 
+    0 0 5px rgba(255, 20, 147, 1),
+    0 0 10px rgba(255, 20, 147, 0.9),
+    0 0 20px rgba(236, 72, 153, 0.8),
+    0 0 30px rgba(236, 72, 153, 0.6),
+    0 0 40px rgba(217, 70, 239, 0.4),
+    inset 0 0 8px rgba(255, 255, 255, 0.6),
+    inset 0 0 15px rgba(255, 20, 147, 0.4);
+  transition: box-shadow 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, 
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 240, 255, 1) 10%,
+    rgba(255, 20, 147, 1) 30%,
+    rgba(236, 72, 153, 1) 50%,
+    rgba(217, 70, 239, 1) 70%,
+    rgba(255, 20, 147, 1) 90%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  box-shadow: 
+    0 0 8px rgba(255, 20, 147, 1),
+    0 0 15px rgba(255, 20, 147, 1),
+    0 0 25px rgba(236, 72, 153, 1),
+    0 0 40px rgba(236, 72, 153, 0.9),
+    0 0 60px rgba(217, 70, 239, 0.7),
+    0 0 80px rgba(217, 70, 239, 0.5),
+    inset 0 0 10px rgba(255, 255, 255, 0.8),
+    inset 0 0 20px rgba(255, 20, 147, 0.6);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(236, 72, 153, 1) rgba(0, 0, 0, 0.1);
 }
 
 /* --- Void background (pure jet black) --- */
@@ -118,12 +202,13 @@ body {
   position: relative;
   min-height: 60vh;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
 .hero .container {
   position: relative;
-  z-index: 2;
+  z-index: 5;
 }
 .hero-content {
   max-width: 1000px;
@@ -241,12 +326,21 @@ body {
 .section {
   padding: 70px 0;
   position: relative;
+  /* Performance optimizations */
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  contain: layout style paint;
 }
 .section-title {
   display: flex;
   align-items: center;
   gap: .75rem;
   margin-bottom: 22px;
+  /* Performance optimizations */
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 .section-title h2 {
   font-size: clamp(1.6rem, 2.5vw, 2.3rem);
@@ -256,6 +350,13 @@ body {
 }
 .section-title .accent {
   color: #ec4899;
+}
+
+/* Performance optimizations for motion elements */
+[data-framer-component] {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 /* --- Cards --- */
@@ -268,6 +369,12 @@ body {
   overflow: hidden;
   transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
   transform-style: preserve-3d;
+  /* Performance optimizations */
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 .neo-card:before {
   content: "";
@@ -409,6 +516,8 @@ body {
 
 .services-tabs {
   overflow: hidden !important;
+  flex-wrap: nowrap !important;
+  width: 100% !important;
 }
 
 .service-tab {
@@ -519,15 +628,226 @@ body {
   border-bottom-color: rgba(236,72,153,.6);
 }
 
-@media (max-width: 992px) {
-  .hero { 
-    padding: 60px 0 40px;
-    min-height: 55vh;
+/* ============================================
+   COMPREHENSIVE RESPONSIVE STYLES
+   ============================================ */
+
+/* Extra Small Devices (phones, < 480px) */
+@media (max-width: 479px) {
+  .section {
+    padding: 40px 0;
+  }
+  .hero {
+    padding: 30px 0 20px;
+    min-height: auto;
   }
   .hero-title {
-    font-size: clamp(2.5rem, 10vw, 4rem);
+    font-size: clamp(1.5rem, 8vw, 2.25rem);
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+  .hero-subtitle {
+    font-size: clamp(0.8rem, 3.5vw, 0.95rem);
+    margin: 1rem auto 0;
+    line-height: 1.5;
+  }
+  .section-title h2 {
+    font-size: clamp(1.1rem, 5vw, 1.4rem);
+  }
+  .neo-card .inner {
+    padding: 18px;
+  }
+  .services-card .inner {
+    padding: 18px;
+  }
+  .neo-card h5 {
+    font-size: 1rem;
+    margin: 10px 0 6px;
+  }
+  .neo-card p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .tab {
+    padding: 4px 8px;
+    font-size: 9px;
+  }
+  .icon-bubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+  .container {
+    padding: 0 12px !important;
+  }
+  .pill-btn {
+    padding: 6px 12px;
+    font-size: 11px;
   }
 }
+
+/* Small Devices (phones, 480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+  .section {
+    padding: 50px 0;
+  }
+  .hero {
+    padding: 40px 0 30px;
+    min-height: auto;
+  }
+  .hero-title {
+    font-size: clamp(2rem, 8vw, 3rem);
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+  .hero-subtitle {
+    font-size: clamp(0.9rem, 3vw, 1rem);
+    margin: 1.5rem auto 0;
+    line-height: 1.6;
+  }
+  .section-title h2 {
+    font-size: clamp(1.4rem, 5vw, 1.8rem);
+  }
+  .neo-card .inner {
+    padding: 24px;
+  }
+  .services-card .inner {
+    padding: 24px;
+  }
+  .neo-card h5 {
+    font-size: 1.1rem;
+    margin: 12px 0 8px;
+  }
+  .neo-card p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  .tab {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+  .icon-bubble {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+  .container {
+    padding: 0 16px !important;
+  }
+  .pill-btn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+}
+
+/* Mobile specific adjustments (all mobile sizes) */
+@media (max-width: 767px) {
+  /* Hero Section */
+  .hero-content {
+    padding: 0 16px;
+  }
+
+  /* Section spacing */
+  .section-title {
+    margin-bottom: 20px;
+    padding: 0 16px;
+  }
+
+  /* Navigation */
+  .navbar {
+    padding: 8px 0;
+  }
+  .brand img {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Tabs - Services */
+  .tabs {
+    flex-wrap: nowrap !important;
+    gap: 4px;
+    padding: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .services-tabs {
+    flex-wrap: nowrap !important;
+    overflow: hidden !important;
+  }
+
+  /* Testimonials */
+  .quote {
+    font-size: 1rem;
+  }
+  .person {
+    margin-top: 14px;
+  }
+  .avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Testimonials section */
+  #clients {
+    padding: 40px 0 !important;
+  }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .section {
+    padding: 70px 0;
+  }
+  .hero {
+    padding: 70px 0 50px;
+    min-height: 60vh;
+  }
+  .hero-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1.1;
+  }
+  .hero-subtitle {
+    font-size: clamp(1rem, 2vw, 1.15rem);
+  }
+  .section-title h2 {
+    font-size: clamp(1.8rem, 3vw, 2.1rem);
+  }
+  .neo-card .inner {
+    padding: 28px;
+  }
+  .services-card .inner {
+    padding: 28px;
+  }
+  .container {
+    padding: 0 20px !important;
+  }
+}
+
+/* Desktop (1024px - 1439px) */
+@media (min-width: 1024px) {
+  .section {
+    padding: 100px 0;
+  }
+  .hero {
+    padding: 100px 0 80px;
+    min-height: 70vh;
+  }
+}
+
+/* Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .section {
+    padding: 120px 0;
+  }
+  .hero {
+    padding: 120px 0 100px;
+    min-height: 75vh;
+  }
+  .container {
+    max-width: 1400px;
+  }
+}
+
 
 /* --- Testimonials Grid --- */
 .testimonials-grid {
@@ -545,6 +865,69 @@ body {
 @media (min-width: 1024px) {
   .testimonials-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Prevent horizontal scroll */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+* {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+img, video, svg, canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Responsive Grid Improvements */
+@media (max-width: 767px) {
+  .testimonials-grid,
+  [class*="grid"] {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  [class*="grid-cols-3"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Responsive Typography */
+@media (max-width: 767px) {
+  h1, .h1 { font-size: clamp(1.5rem, 8vw, 2.5rem) !important; }
+  h2, .h2 { font-size: clamp(1.2rem, 5vw, 1.8rem) !important; }
+  h3, .h3 { font-size: clamp(1.1rem, 4vw, 1.5rem) !important; }
+  h4, .h4 { font-size: clamp(1rem, 3.5vw, 1.3rem) !important; }
+  h5, .h5 { font-size: clamp(0.95rem, 3vw, 1.2rem) !important; }
+  p, .p { font-size: clamp(0.85rem, 2.5vw, 1rem) !important; }
+}
+
+/* Responsive Spacing */
+@media (max-width: 767px) {
+  .section-title {
+    gap: 0.5rem !important;
+  }
+  .glow-dot {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* Touch-friendly interactive elements */
+@media (max-width: 1023px) {
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .tab {
+    min-height: 36px;
   }
 }
 
