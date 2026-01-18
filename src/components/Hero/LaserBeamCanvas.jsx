@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './LaserBeamCanvas.css';
+import { useScrollPerformance } from '../../hooks/useScrollPerformance';
 
 // Configuration variables
 const CONFIG = {
@@ -44,6 +45,7 @@ const LaserBeamCanvas = () => {
   const startTimeRef = useRef(null);
   const phaseRef = useRef('convergence');
   const [reducedMotion, setReducedMotion] = useState(false);
+  const isScrolling = useScrollPerformance();
 
   useEffect(() => {
     // Check for reduced motion preference
@@ -908,15 +910,31 @@ const LaserBeamCanvas = () => {
 
     // Animation loop
     let lastTime = null;
+    let lastFrameTime = performance.now();
     const animate = (currentTime) => {
       if (!animationStartTime) {
         animationStartTime = currentTime;
         auroraStartTime = currentTime; // Start aurora pulsation
         lastTime = currentTime;
+        lastFrameTime = currentTime;
       }
 
+      // During active scroll: completely pause animation to prevent jitter
+      if (isScrolling) {
+        // Don't update, just keep requesting frames to resume quickly when scroll stops
+        animationFrameRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      
+      const timeSinceLastFrame = currentTime - lastFrameTime;
+      lastFrameTime = currentTime;
+      
+      // Use delta time for consistent animation speed
+      const deltaTime = Math.min(timeSinceLastFrame / 16.67, 2); // Cap delta to prevent jumps
+
       const elapsed = (currentTime - animationStartTime) / 1000;
-      const deltaTime = lastTime ? (currentTime - lastTime) / 16.67 : 1;
+      // Use consistent delta time calculation for smooth animation
+      const animationDelta = lastTime ? deltaTime : 1;
       lastTime = currentTime;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -943,7 +961,7 @@ const LaserBeamCanvas = () => {
         }
         
         particles = particles.filter(p => {
-          const alive = p.update(deltaTime, currentTime);
+          const alive = p.update(animationDelta, currentTime);
           if (alive) p.draw(ctx);
           return alive;
         });
@@ -963,7 +981,7 @@ const LaserBeamCanvas = () => {
         drawBeam(beamProgress, beamOpacity);
         
         particles = particles.filter(p => {
-          const alive = p.update(deltaTime, currentTime);
+          const alive = p.update(animationDelta, currentTime);
           if (alive) p.draw(ctx);
           return alive;
         });
@@ -983,7 +1001,7 @@ const LaserBeamCanvas = () => {
         }
         
         particles = particles.filter(p => {
-          const alive = p.update(deltaTime, currentTime);
+          const alive = p.update(animationDelta, currentTime);
           if (alive) p.draw(ctx);
           return alive;
         });
@@ -1010,7 +1028,7 @@ const LaserBeamCanvas = () => {
         drawHorizontalSpread(initialSpread, pulseIntensity);
         
         particles = particles.filter(p => {
-          const alive = p.update(deltaTime, currentTime);
+          const alive = p.update(animationDelta, currentTime);
           if (alive) p.draw(ctx);
           return alive;
         });
@@ -1043,7 +1061,7 @@ const LaserBeamCanvas = () => {
          drawHorizontalSpread(spreadProgress, pulseIntensity);
          
          particles = particles.filter(p => {
-           const alive = p.update(deltaTime, currentTime);
+           const alive = p.update(animationDelta, currentTime);
            if (alive) p.draw(ctx);
            return alive;
          });
@@ -1066,7 +1084,7 @@ const LaserBeamCanvas = () => {
          drawHorizontalSpread(1, pulseIntensity); // Full spread with pulse
        
          particles = particles.filter(p => {
-           const alive = p.update(deltaTime, currentTime);
+           const alive = p.update(animationDelta, currentTime);
            if (alive) p.draw(ctx);
            return alive;
          });
@@ -1081,7 +1099,7 @@ const LaserBeamCanvas = () => {
         
         // Particles fade out naturally
         particles = particles.filter(p => {
-          const alive = p.update(deltaTime, currentTime);
+          const alive = p.update(animationDelta, currentTime);
           if (alive) p.draw(ctx);
           return alive;
         });
@@ -1117,6 +1135,15 @@ const LaserBeamCanvas = () => {
         height: '100%',
         pointerEvents: 'none',
         zIndex: 4,
+        // Lenis compatibility - prevent jitter
+        willChange: 'auto',
+        transform: 'translateZ(0)',
+        WebkitTransform: 'translateZ(0)',
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
+        // Prevent repaint during scroll
+        contain: 'layout style paint',
+        isolation: 'isolate',
       }}
     />
   );

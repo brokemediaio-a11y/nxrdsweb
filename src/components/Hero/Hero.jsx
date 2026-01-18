@@ -9,7 +9,18 @@ const Hero = () => {
   const mobile = isMobile();
 
   return (
-    <header className="hero" style={{ position: 'relative', overflow: 'hidden' }}>
+    <header className="hero" style={{ 
+      position: 'relative', 
+      overflow: 'hidden',
+      willChange: 'auto',
+      transform: 'translateZ(0)',
+      WebkitTransform: 'translateZ(0)',
+      backfaceVisibility: 'hidden',
+      WebkitBackfaceVisibility: 'hidden',
+      // Isolate from scroll transforms to prevent jitter
+      isolation: 'isolate',
+      contain: 'layout style',
+    }}>
       {/* Galaxy Background - z-index: 1 */}
       <GalaxyBackground />
       
@@ -19,7 +30,12 @@ const Hero = () => {
         inset: 0,
         zIndex: 4,
         pointerEvents: 'none',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        // Isolate canvas animations from scroll
+        isolation: 'isolate',
+        contain: 'layout style paint',
+        transform: 'translateZ(0)',
+        WebkitTransform: 'translateZ(0)',
       }}>
         {/* Laser Beam Canvas Animation */}
         <LaserBeamCanvas />

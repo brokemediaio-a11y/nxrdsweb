@@ -1,7 +1,9 @@
 import React, { memo, useEffect, useRef } from 'react';
+import { useScrollPerformance } from '../../hooks/useScrollPerformance';
 
 const GalaxyBackground = () => {
   const canvasRef = useRef(null);
+  const isScrolling = useScrollPerformance();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -12,19 +14,42 @@ const GalaxyBackground = () => {
     let particles = [];
 
     // Set canvas size to fill the hero section
+    // Use device pixel ratio for crisp rendering
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      
+      // Set actual canvas size (accounting for device pixel ratio)
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      
+      // Scale context to account for device pixel ratio
+      ctx.scale(dpr, dpr);
+      
+      // Set display size
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      
       initParticles();
+    };
+
+    // Get display dimensions helper
+    const getDisplayDims = () => {
+      const dpr = window.devicePixelRatio || 1;
+      return {
+        width: canvas.width / dpr,
+        height: canvas.height / dpr
+      };
     };
 
     // Particle class
     class Particle {
       constructor() {
         this.reset();
-        // Random initial position
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
+        const dims = getDisplayDims();
+        // Random initial position using display dimensions
+        this.x = Math.random() * dims.width;
+        this.y = Math.random() * dims.height;
       }
 
       reset() {
@@ -45,15 +70,17 @@ const GalaxyBackground = () => {
       }
 
       update() {
+        const dims = getDisplayDims();
+        
         // Move particle
         this.x += this.speedX;
         this.y += this.speedY;
 
-        // Wrap around screen edges (seamless loop)
-        if (this.x < 0) this.x = canvas.width;
-        if (this.x > canvas.width) this.x = 0;
-        if (this.y < 0) this.y = canvas.height;
-        if (this.y > canvas.height) this.y = 0;
+        // Wrap around screen edges (seamless loop) using display dimensions
+        if (this.x < 0) this.x = dims.width;
+        if (this.x > dims.width) this.x = 0;
+        if (this.y < 0) this.y = dims.height;
+        if (this.y > dims.height) this.y = 0;
 
         // Twinkling effect (subtle opacity changes)
         this.opacity += this.twinkleSpeed * this.twinkleDirection;
@@ -120,10 +147,35 @@ const GalaxyBackground = () => {
       }
     };
 
-    // Animation loop
-    const animate = () => {
-      // Clear canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Animation loop - pause during scroll to prevent jitter
+    let lastFrameTime = performance.now();
+    let isPaused = false;
+    
+    const animate = (currentTime) => {
+      // During active scroll: completely pause animation to prevent jitter
+      if (isScrolling) {
+        isPaused = true;
+        // Still request frames but don't update - keeps last frame visible
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
+      
+      // Resume animation when scroll stops
+      if (isPaused) {
+        isPaused = false;
+        lastFrameTime = currentTime; // Reset time to prevent jumps
+      }
+      
+      const timeSinceLastFrame = currentTime - lastFrameTime;
+      lastFrameTime = currentTime;
+
+      // Get display dimensions (accounting for device pixel ratio)
+      const dpr = window.devicePixelRatio || 1;
+      const displayWidth = canvas.width / dpr;
+      const displayHeight = canvas.height / dpr;
+      
+      // Clear canvas using display dimensions
+      ctx.clearRect(0, 0, displayWidth, displayHeight);
 
       // Update and draw all particles
       particles.forEach(particle => {
@@ -136,7 +188,7 @@ const GalaxyBackground = () => {
 
     // Initialize and start animation
     resizeCanvas();
-    animate();
+    requestAnimationFrame(animate);
 
     // Handle window resize
     window.addEventListener('resize', resizeCanvas);
@@ -146,7 +198,7 @@ const GalaxyBackground = () => {
       window.removeEventListener('resize', resizeCanvas);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [isScrolling]);
 
   return (
     <>
@@ -160,7 +212,17 @@ const GalaxyBackground = () => {
           width: '100%',
           height: '100%',
           zIndex: 0,
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          // Lenis compatibility - prevent jitter
+          willChange: 'auto', // Change to 'auto' during scroll pause
+          transform: 'translateZ(0)',
+          WebkitTransform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          // Isolate from scroll transforms
+          isolation: 'isolate',
+          // Prevent repaint during scroll
+          contain: 'layout style paint',
         }}
       />
     </>

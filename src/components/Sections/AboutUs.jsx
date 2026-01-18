@@ -11,27 +11,32 @@ const AboutUs = () => {
   const [titleRef, titleInView] = useInView({ 
     once: true, 
     threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    rootMargin: '0px 0px -50px 0px',
+    triggerOnce: true
   });
   const [statsRef, statsInView] = useInView({ 
     once: true, 
     threshold: 0.05,
-    rootMargin: '0px 0px -100px 0px'
+    rootMargin: '0px 0px -100px 0px',
+    triggerOnce: true
   });
   const [contentRef, contentInView] = useInView({ 
     once: true, 
     threshold: 0.05,
-    rootMargin: '0px 0px -100px 0px'
+    rootMargin: '0px 0px -100px 0px',
+    triggerOnce: true
   });
   const [valuesRef, valuesInView] = useInView({ 
     once: true, 
     threshold: 0.05,
-    rootMargin: '0px 0px -100px 0px'
+    rootMargin: '0px 0px -100px 0px',
+    triggerOnce: true
   });
   const [foundersRef, foundersInView] = useInView({ 
     once: true, 
     threshold: 0.05,
-    rootMargin: '0px 0px -100px 0px'
+    rootMargin: '0px 0px -100px 0px',
+    triggerOnce: true
   });
 
   const founders = [
@@ -672,9 +677,9 @@ const AboutUs = () => {
               position: 'relative'
             }}
           >
-            {/* Floating circle on the left between Innovation First and Code Excellence */}
-            {!isMobile && (
-              <motion.div
+              {/* Floating circle on the left between Innovation First and Code Excellence */}
+              {!isTablet && (
+                <motion.div
                 style={{
                   position: 'absolute',
                   left: '-60px',
@@ -718,7 +723,7 @@ const AboutUs = () => {
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)',
                   border: '1px solid rgba(255, 255, 255, 0.15)',
                   borderRadius: '20px',
-                  padding: isMobile ? '28px' : '36px',
+                  padding: '36px',
                   position: 'relative',
                   overflow: 'hidden',
                   cursor: 'pointer',
@@ -775,14 +780,14 @@ const AboutUs = () => {
                 
                 <div style={{
                   display: 'flex',
-                  gap: isMobile ? '16px' : '20px',
+                  gap: '20px',
                   alignItems: 'flex-start',
                   width: '100%'
                 }}>
-                  <div style={{
+                  <div                   style={{
                     flexShrink: 0,
-                    width: isMobile ? '48px' : '56px',
-                    height: isMobile ? '48px' : '56px',
+                    width: '56px',
+                    height: '56px',
                     borderRadius: '16px',
                     background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(244, 114, 182, 0.15))',
                     border: '1px solid rgba(236, 72, 153, 0.3)',
@@ -791,20 +796,20 @@ const AboutUs = () => {
                     justifyContent: 'center',
                     color: '#ec4899'
                   }}>
-                    {React.cloneElement(value.icon, { size: isMobile ? 20 : 24 })}
+                    {React.cloneElement(value.icon, { size: 24 })}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <h4 style={{
-                      fontSize: isMobile ? '1.125rem' : '1.375rem',
+                      fontSize: '1.375rem',
                       fontWeight: 600,
-                      marginBottom: isMobile ? '8px' : '12px',
+                      marginBottom: '12px',
                       color: 'rgba(255, 255, 255, 0.95)',
                       lineHeight: '1.3'
                     }}>
                       {value.title}
                     </h4>
                     <p style={{
-                      fontSize: isMobile ? '0.875rem' : '1rem',
+                      fontSize: '1rem',
                       lineHeight: '1.6',
                       color: 'rgba(255, 255, 255, 0.75)',
                       margin: 0
@@ -885,177 +890,177 @@ const AboutUs = () => {
                   perspective: '1000px'
                 }}
               >
-                {/* Animated glassmorphism gradient overlay */}
-                <motion.div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'radial-gradient(circle at 50% 0%, rgba(236, 72, 153, 0.15) 0%, transparent 70%)',
-                    opacity: 0,
-                    borderRadius: '24px',
-                    pointerEvents: 'none'
-                  }}
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
+                        {/* Animated glassmorphism gradient overlay */}
+                        <motion.div
+                          style={{
+                            position: 'absolute',
+                            inset: 0,
+                            background: 'radial-gradient(circle at 50% 0%, rgba(236, 72, 153, 0.15) 0%, transparent 70%)',
+                            opacity: 0,
+                            borderRadius: '24px',
+                            pointerEvents: 'none'
+                          }}
+                          whileHover={{ opacity: 1 }}
+                          transition={{ duration: 0.3 }}
+                        />
 
-                {/* Glassmorphism top glow effect */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: '2px',
-                    background: 'linear-gradient(90deg, transparent, rgba(236, 72, 153, 0.8), rgba(244, 114, 182, 0.8), transparent)',
-                    pointerEvents: 'none',
-                    boxShadow: '0 0 20px rgba(236, 72, 153, 0.4)'
-                  }}
-                />
+                        {/* Glassmorphism top glow effect */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: '2px',
+                            background: 'linear-gradient(90deg, transparent, rgba(236, 72, 153, 0.8), rgba(244, 114, 182, 0.8), transparent)',
+                            pointerEvents: 'none',
+                            boxShadow: '0 0 20px rgba(236, 72, 153, 0.4)'
+                          }}
+                        />
 
-                {/* Glass reflection effect */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '10%',
-                    left: '20%',
-                    width: '60%',
-                    height: '40%',
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%)',
-                    borderRadius: '50%',
-                    filter: 'blur(40px)',
-                    pointerEvents: 'none',
-                    opacity: 0.5
-                  }}
-                />
+                        {/* Glass reflection effect */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: '10%',
+                            left: '20%',
+                            width: '60%',
+                            height: '40%',
+                            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%)',
+                            borderRadius: '50%',
+                            filter: 'blur(40px)',
+                            pointerEvents: 'none',
+                            opacity: 0.5
+                          }}
+                        />
 
-                <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                  {/* 3D Person Icon */}
-                  <motion.div
-                    style={{
-                      width: isMobile ? '120px' : '140px',
-                      height: isMobile ? '120px' : '140px',
-                      margin: '0 auto 24px',
-                      borderRadius: '50%',
-                      position: 'relative',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(244, 114, 182, 0.2) 100%)',
-                      border: '2px solid rgba(236, 72, 153, 0.3)',
-                      boxShadow: '0 8px 32px rgba(236, 72, 153, 0.3), inset 0 0 30px rgba(236, 72, 153, 0.1), 0 0 60px rgba(244, 114, 182, 0.2)',
-                      transformStyle: 'preserve-3d',
-                      perspective: '1000px'
-                    }}
-                    whileHover={{ 
-                      scale: 1.05, 
-                      rotateY: 10,
-                      rotateX: -5,
-                      boxShadow: '0 12px 40px rgba(236, 72, 153, 0.4), inset 0 0 40px rgba(236, 72, 153, 0.15), 0 0 80px rgba(244, 114, 182, 0.3)'
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {/* Inner glow effect */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        inset: '10%',
-                        borderRadius: '50%',
-                        background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 70%)',
-                        filter: 'blur(20px)',
-                        pointerEvents: 'none'
-                      }}
-                    />
-                    
-                    {/* 3D Icon */}
-                    <motion.div
-                      style={{
-                        position: 'relative',
-                        zIndex: 1,
-                        color: '#ec4899',
-                        filter: 'drop-shadow(0 4px 8px rgba(236, 72, 153, 0.4))'
-                      }}
-                      animate={{
-                        y: [0, -5, 0],
-                      }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: 'easeInOut'
-                      }}
-                    >
-                      <User 
-                        size={isMobile ? 60 : 70} 
-                        strokeWidth={1.5}
-                        style={{
-                          filter: 'drop-shadow(0 2px 4px rgba(236, 72, 153, 0.5))'
-                        }}
-                      />
-                    </motion.div>
+                        <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+                          {/* 3D Person Icon */}
+                          <motion.div
+                            style={{
+                              width: '120px',
+                              height: '120px',
+                              margin: '0 auto 24px',
+                              borderRadius: '50%',
+                              position: 'relative',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(244, 114, 182, 0.2) 100%)',
+                              border: '2px solid rgba(236, 72, 153, 0.3)',
+                              boxShadow: '0 8px 32px rgba(236, 72, 153, 0.3), inset 0 0 30px rgba(236, 72, 153, 0.1), 0 0 60px rgba(244, 114, 182, 0.2)',
+                              transformStyle: 'preserve-3d',
+                              perspective: '1000px'
+                            }}
+                            whileHover={{ 
+                              scale: 1.05, 
+                              rotateY: 10,
+                              rotateX: -5,
+                              boxShadow: '0 12px 40px rgba(236, 72, 153, 0.4), inset 0 0 40px rgba(236, 72, 153, 0.15), 0 0 80px rgba(244, 114, 182, 0.3)'
+                            }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            {/* Inner glow effect */}
+                            <div
+                              style={{
+                                position: 'absolute',
+                                inset: '10%',
+                                borderRadius: '50%',
+                                background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 70%)',
+                                filter: 'blur(20px)',
+                                pointerEvents: 'none'
+                              }}
+                            />
+                            
+                            {/* 3D Icon */}
+                            <motion.div
+                              style={{
+                                position: 'relative',
+                                zIndex: 1,
+                                color: '#ec4899',
+                                filter: 'drop-shadow(0 4px 8px rgba(236, 72, 153, 0.4))'
+                              }}
+                              animate={{
+                                y: [0, -5, 0],
+                              }}
+                              transition={{
+                                duration: 3,
+                                repeat: Infinity,
+                                ease: 'easeInOut'
+                              }}
+                            >
+                              <User 
+                                size={60} 
+                                strokeWidth={1.5}
+                                style={{
+                                  filter: 'drop-shadow(0 2px 4px rgba(236, 72, 153, 0.5))'
+                                }}
+                              />
+                            </motion.div>
 
-                    {/* Outer ring glow */}
-                    <motion.div
-                      style={{
-                        position: 'absolute',
-                        inset: '-10px',
-                        borderRadius: '50%',
-                        border: '2px solid rgba(236, 72, 153, 0.2)',
-                        pointerEvents: 'none',
-                        opacity: 0
-                      }}
-                      whileHover={{
-                        opacity: 1,
-                        scale: 1.1,
-                        borderColor: 'rgba(244, 114, 182, 0.4)'
-                      }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </motion.div>
+                            {/* Outer ring glow */}
+                            <motion.div
+                              style={{
+                                position: 'absolute',
+                                inset: '-10px',
+                                borderRadius: '50%',
+                                border: '2px solid rgba(236, 72, 153, 0.2)',
+                                pointerEvents: 'none',
+                                opacity: 0
+                              }}
+                              whileHover={{
+                                opacity: 1,
+                                scale: 1.1,
+                                borderColor: 'rgba(244, 114, 182, 0.4)'
+                              }}
+                              transition={{ duration: 0.3 }}
+                            />
+                          </motion.div>
 
-                  {/* Name */}
-                  <h4
-                    style={{
-                      fontSize: isMobile ? '1.25rem' : '1.5rem',
-                      fontWeight: 600,
-                      marginBottom: '8px',
-                      color: 'rgba(255, 255, 255, 0.95)',
-                      lineHeight: '1.3'
-                    }}
-                  >
-                    {founder.name}
-                  </h4>
+                          {/* Name */}
+                          <h4
+                            style={{
+                              fontSize: '1.25rem',
+                              fontWeight: 600,
+                              marginBottom: '8px',
+                              color: 'rgba(255, 255, 255, 0.95)',
+                              lineHeight: '1.3'
+                            }}
+                          >
+                            {founder.name}
+                          </h4>
 
-                  {/* Position */}
-                  <p
-                    style={{
-                      fontSize: isMobile ? '0.95rem' : '1.05rem',
-                      color: 'rgba(236, 72, 153, 0.9)',
-                      fontWeight: 500,
-                      margin: 0,
-                      lineHeight: '1.4'
-                    }}
-                  >
-                    {founder.position}
-                  </p>
-                </div>
+                          {/* Position */}
+                          <p
+                            style={{
+                              fontSize: '0.95rem',
+                              color: 'rgba(236, 72, 153, 0.9)',
+                              fontWeight: 500,
+                              margin: 0,
+                              lineHeight: '1.4'
+                            }}
+                          >
+                            {founder.position}
+                          </p>
+                        </div>
 
-                {/* 3D depth effect on hover */}
-                <motion.div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    borderRadius: '24px',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    opacity: 0,
-                    pointerEvents: 'none',
-                    transform: 'translateZ(20px)'
-                  }}
-                  whileHover={{ 
-                    opacity: 1,
-                    boxShadow: 'inset 0 0 40px rgba(236, 72, 153, 0.1)'
-                  }}
-                  transition={{ duration: 0.3 }}
-                />
+                        {/* 3D depth effect on hover */}
+                        <motion.div
+                          style={{
+                            position: 'absolute',
+                            inset: 0,
+                            borderRadius: '24px',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            opacity: 0,
+                            pointerEvents: 'none',
+                            transform: 'translateZ(20px)'
+                          }}
+                          whileHover={{ 
+                            opacity: 1,
+                            boxShadow: 'inset 0 0 40px rgba(236, 72, 153, 0.1)'
+                          }}
+                          transition={{ duration: 0.3 }}
+                        />
               </motion.div>
             ))}
           </div>

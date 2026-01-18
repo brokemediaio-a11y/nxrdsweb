@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { LenisProvider } from './contexts/LenisContext';
 // @ts-ignore
 import Layout from './components/Layout/Layout';
+// @ts-ignore
+import Navbar from './components/Navigation/Navbar';
 // @ts-ignore
 import Hero from './components/Hero/Hero';
 // @ts-ignore
@@ -16,6 +19,7 @@ import AboutUs from './components/Sections/AboutUs';
 import Contact from './components/Sections/Contact';
 
 function App() {
+
   useEffect(() => {
     // Initialize reveal animations - make all elements visible immediately
     const initReveal = () => {
@@ -41,20 +45,28 @@ function App() {
   }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Layout>
-        <Hero />
-        <Services />
-        <Capabilities />
-        <AboutUs />
-        <ClientSpeak />
-        <Contact />
-      </Layout>
-    </motion.div>
+    <LenisProvider>
+      <Navbar />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        style={{
+          willChange: 'opacity',
+          transform: 'translateZ(0)',
+          WebkitTransform: 'translateZ(0)',
+        }}
+      >
+        <Layout>
+          <Hero />
+          <Services />
+          <Capabilities />
+          <AboutUs />
+          <ClientSpeak />
+          <Contact />
+        </Layout>
+      </motion.div>
+    </LenisProvider>
   );
 }
 

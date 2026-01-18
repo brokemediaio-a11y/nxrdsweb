@@ -51,9 +51,46 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Lenis will handle smooth scrolling, so we disable native smooth scroll */
+  scroll-behavior: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Lenis requires this */
+  overflow-x: hidden;
+}
+
+/* Lenis smooth scroll styles */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Ensure navbar stays fixed and not transformed by Lenis */
+.navbar,
+[data-lenis-prevent].navbar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  transform: translate3d(0, 0, 0) !important;
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  will-change: auto !important;
+  z-index: 99999 !important;
 }
 
 html, body { 
@@ -149,6 +186,19 @@ body {
   backdrop-filter: blur(14px);
   background: rgba(5,5,6,.35);
   border-bottom: 1px solid rgba(255,255,255,.06);
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 99999 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
 }
 .brand {
   display: flex;
@@ -198,13 +248,14 @@ body {
 
 /* --- Hero --- */
 .hero {
-  padding: 60px 0 40px;
+  padding: 80px 0 40px;
   position: relative;
   min-height: 60vh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  margin-top: 0;
 }
 .hero .container {
   position: relative;
@@ -331,6 +382,9 @@ body {
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   contain: layout style paint;
+  /* Prevent layout shifts during scroll */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
 }
 .section-title {
   display: flex;
@@ -359,6 +413,41 @@ body {
   -webkit-transform: translateZ(0);
 }
 
+/* GPU acceleration for smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+body {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+
+/* Optimize canvas elements during scroll - Lenis compatible */
+canvas {
+  will-change: auto; /* Changed from 'contents' to prevent jitter during scroll */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  contain: layout style paint;
+  /* Prevent jitter during Lenis smooth scroll */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  /* GPU acceleration */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  /* Smooth rendering */
+  -webkit-font-smoothing: antialiased;
+  /* Isolate from scroll transforms */
+  isolation: isolate;
+}
+
 /* --- Cards --- */
 .neo-card {
   border-radius: var(--radius);
@@ -375,6 +464,9 @@ body {
   -webkit-transform: translateZ(0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  /* GPU acceleration */
+  isolation: isolate;
+  contain: layout style paint;
 }
 .neo-card:before {
   content: "";

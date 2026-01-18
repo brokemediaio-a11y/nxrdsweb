@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { 
   Workflow, 
@@ -7,11 +7,14 @@ import {
   ShieldCheck,
   Settings,
   TrendingUp,
-  Box
+  Box,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { SparklesCore } from '../UI/Sparkles';
 
 const Capabilities = () => {
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const capabilities = [
     {
       icon: <Workflow size={24} />,
@@ -51,12 +54,14 @@ const Capabilities = () => {
   const [titleRef, titleInView] = useInView({ 
     once: true, 
     threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    rootMargin: '0px 0px -50px 0px',
+    triggerOnce: true
   });
   const [cardsRef, cardsInView] = useInView({ 
     once: true, 
     threshold: 0.05,
-    rootMargin: '0px 0px -100px 0px'
+    rootMargin: '0px 0px -100px 0px',
+    triggerOnce: true
   });
 
   const containerVariants = {
@@ -99,6 +104,18 @@ const Capabilities = () => {
         ease: [0.16, 1, 0.3, 1]
       }
     }
+  };
+
+  const nextCard = () => {
+    setCurrentCardIndex((prev) => (prev + 1) % capabilities.length);
+  };
+
+  const prevCard = () => {
+    setCurrentCardIndex((prev) => (prev - 1 + capabilities.length) % capabilities.length);
+  };
+
+  const goToCard = (index) => {
+    setCurrentCardIndex(index);
   };
   
   return (
@@ -148,27 +165,352 @@ const Capabilities = () => {
           </motion.div>
         </div>
 
-        <motion.div 
-          ref={cardsRef}
-          variants={containerVariants}
-          initial="hidden"
-          animate={cardsInView ? 'visible' : 'hidden'}
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'), 
-            gap: isMobile ? '20px' : (isTablet ? '24px' : '28px'),
-            marginTop: isMobile ? '40px' : '60px'
-          }}
-        >
-          {capabilities.map((capability, index) => (
+        {/* Mobile Carousel */}
+        {isMobile ? (
+          <div style={{ marginTop: '40px', position: 'relative' }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentCardIndex}
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {(() => {
+                  const capability = capabilities[currentCardIndex];
+                  return (
+                    <motion.div
+                      whileHover="hover"
+                      style={{
+                        position: 'relative',
+                        borderRadius: '20px',
+                        padding: '28px 20px',
+                        background: 'rgba(10, 10, 12, 0.6)',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        cursor: 'pointer',
+                        overflow: 'hidden',
+                        willChange: 'transform',
+                        transform: 'translateZ(0)',
+                        WebkitTransform: 'translateZ(0)'
+                      }}
+                    >
+                      {/* Running Light Border Effect - Top Border */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          height: '2px',
+                          background: 'linear-gradient(90deg, transparent, transparent, transparent)',
+                          borderRadius: '20px 20px 0 0',
+                          overflow: 'hidden',
+                          pointerEvents: 'none',
+                          zIndex: 3
+                        }}
+                      >
+                        <motion.div
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: '-50%',
+                            width: '50%',
+                            height: '100%',
+                            background: 'linear-gradient(90deg, transparent, #ec4899, #f472b6, transparent)',
+                            filter: 'blur(1px)',
+                            boxShadow: '0 0 10px rgba(236, 72, 153, 0.8), 0 0 20px rgba(236, 72, 153, 0.6)'
+                          }}
+                          animate={{
+                            left: ['-50%', '150%'],
+                          }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: 'linear',
+                            delay: currentCardIndex * 0.5
+                          }}
+                        />
+                      </div>
+
+                      {/* Running Light Border Effect - Right Border */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          right: 0,
+                          bottom: 0,
+                          width: '2px',
+                          background: 'linear-gradient(180deg, transparent, transparent, transparent)',
+                          borderRadius: '0 20px 20px 0',
+                          overflow: 'hidden',
+                          pointerEvents: 'none',
+                          zIndex: 3
+                        }}
+                      >
+                        <motion.div
+                          style={{
+                            position: 'absolute',
+                            top: '-50%',
+                            right: 0,
+                            width: '100%',
+                            height: '50%',
+                            background: 'linear-gradient(180deg, transparent, #f472b6, #ec4899, transparent)',
+                            filter: 'blur(1px)',
+                            boxShadow: '0 0 10px rgba(244, 114, 182, 0.8), 0 0 20px rgba(244, 114, 182, 0.6)'
+                          }}
+                          animate={{
+                            top: ['-50%', '150%'],
+                          }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: 'linear',
+                            delay: currentCardIndex * 0.5 + 0.75
+                          }}
+                        />
+                      </div>
+
+                      {/* Running Light Border Effect - Bottom Border */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          height: '2px',
+                          background: 'linear-gradient(90deg, transparent, transparent, transparent)',
+                          borderRadius: '0 0 20px 20px',
+                          overflow: 'hidden',
+                          pointerEvents: 'none',
+                          zIndex: 3
+                        }}
+                      >
+                        <motion.div
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            right: '-50%',
+                            width: '50%',
+                            height: '100%',
+                            background: 'linear-gradient(90deg, transparent, #f472b6, #ec4899, transparent)',
+                            filter: 'blur(1px)',
+                            boxShadow: '0 0 10px rgba(236, 72, 153, 0.8), 0 0 20px rgba(236, 72, 153, 0.6)'
+                          }}
+                          animate={{
+                            right: ['-50%', '150%'],
+                          }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: 'linear',
+                            delay: currentCardIndex * 0.5 + 1.5
+                          }}
+                        />
+                      </div>
+
+                      {/* Running Light Border Effect - Left Border */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          bottom: 0,
+                          width: '2px',
+                          background: 'linear-gradient(180deg, transparent, transparent, transparent)',
+                          borderRadius: '20px 0 0 20px',
+                          overflow: 'hidden',
+                          pointerEvents: 'none',
+                          zIndex: 3
+                        }}
+                      >
+                        <motion.div
+                          style={{
+                            position: 'absolute',
+                            bottom: '-50%',
+                            left: 0,
+                            width: '100%',
+                            height: '50%',
+                            background: 'linear-gradient(180deg, transparent, #ec4899, #f472b6, transparent)',
+                            filter: 'blur(1px)',
+                            boxShadow: '0 0 10px rgba(236, 72, 153, 0.8), 0 0 20px rgba(236, 72, 153, 0.6)'
+                          }}
+                          animate={{
+                            bottom: ['-50%', '150%'],
+                          }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: 'linear',
+                            delay: currentCardIndex * 0.5 + 2.25
+                          }}
+                        />
+                      </div>
+
+                      {/* Card Background with Glassmorphism */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%)',
+                          backdropFilter: 'blur(20px) saturate(150%)',
+                          WebkitBackdropFilter: 'blur(20px) saturate(150%)',
+                          borderRadius: '20px',
+                          pointerEvents: 'none'
+                        }}
+                      />
+
+                      {/* Content */}
+                      <div style={{ position: 'relative', zIndex: 2 }}>
+                        {/* Icon */}
+                        <motion.div
+                          variants={iconVariants}
+                          whileHover="hover"
+                          style={{
+                            width: '56px',
+                            height: '56px',
+                            borderRadius: '16px',
+                            background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(244, 114, 182, 0.15) 100%)',
+                            border: '1px solid rgba(236, 72, 153, 0.2)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#ec4899',
+                            marginBottom: '24px',
+                            position: 'relative',
+                            overflow: 'hidden'
+                          }}
+                        >
+                          <span style={{ position: 'relative', zIndex: 1 }}>
+                            {React.cloneElement(capability.icon, { 
+                              size: 24,
+                              strokeWidth: 1.5
+                            })}
+                          </span>
+                        </motion.div>
+
+                        {/* Title */}
+                        <h5 style={{
+                          fontSize: '1.1rem',
+                          fontWeight: 600,
+                          marginBottom: '12px',
+                          color: 'rgba(255, 255, 255, 0.95)',
+                          lineHeight: '1.3',
+                          letterSpacing: '-0.01em'
+                        }}>
+                          {capability.title}
+                        </h5>
+
+                        {/* Description */}
+                        <p style={{
+                          fontSize: '0.875rem',
+                          lineHeight: '1.7',
+                          color: 'rgba(255, 255, 255, 0.7)',
+                          margin: 0
+                        }}>
+                          {capability.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  );
+                })()}
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Navigation Buttons */}
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginTop: '24px',
+              gap: '16px'
+            }}>
+              <button
+                onClick={prevCard}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.06)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '12px',
+                  padding: '12px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#ec4899',
+                  transition: 'all 0.3s ease',
+                  backdropFilter: 'blur(14px)',
+                  WebkitBackdropFilter: 'blur(14px)'
+                }}
+              >
+                <ChevronLeft size={24} />
+              </button>
+
+              {/* Dot Indicators */}
+              <div style={{ display: 'flex', gap: '8px', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                {capabilities.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goToCard(index)}
+                    style={{
+                      width: currentCardIndex === index ? '8px' : '6px',
+                      height: currentCardIndex === index ? '8px' : '6px',
+                      borderRadius: '50%',
+                      background: currentCardIndex === index ? '#ec4899' : 'rgba(255, 255, 255, 0.3)',
+                      border: 'none',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      padding: 0,
+                      minWidth: currentCardIndex === index ? '8px' : '6px',
+                      minHeight: currentCardIndex === index ? '8px' : '6px',
+                      boxShadow: currentCardIndex === index ? '0 0 6px rgba(236, 72, 153, 0.5)' : 'none'
+                    }}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={nextCard}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.06)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '12px',
+                  padding: '12px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#ec4899',
+                  transition: 'all 0.3s ease',
+                  backdropFilter: 'blur(14px)',
+                  WebkitBackdropFilter: 'blur(14px)'
+                }}
+              >
+                <ChevronRight size={24} />
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* Desktop Grid */
+          <motion.div 
+            ref={cardsRef}
+            variants={containerVariants}
+            initial="hidden"
+            animate={cardsInView ? 'visible' : 'hidden'}
+            style={{ 
+              display: 'grid', 
+              gridTemplateColumns: isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', 
+              gap: isTablet ? '24px' : '28px',
+              marginTop: '60px'
+            }}
+          >
+            {capabilities.map((capability, index) => (
             <motion.div
               key={capability.title}
               variants={cardVariants}
               whileHover="hover"
-              style={{
-                position: 'relative',
-                borderRadius: '20px',
-                padding: isMobile ? '28px 20px' : (isTablet ? '32px 24px' : '40px 32px'),
+                style={{
+                  position: 'relative',
+                  borderRadius: '20px',
+                  padding: isTablet ? '32px 24px' : '40px 32px',
                 background: 'rgba(10, 10, 12, 0.6)',
                 border: '1px solid rgba(255, 255, 255, 0.08)',
                 cursor: 'pointer',
@@ -382,8 +724,8 @@ const Capabilities = () => {
                   variants={iconVariants}
                   whileHover="hover"
                   style={{
-                    width: isMobile ? '56px' : (isTablet ? '64px' : '70px'),
-                    height: isMobile ? '56px' : (isTablet ? '64px' : '70px'),
+                    width: isTablet ? '64px' : '70px',
+                    height: isTablet ? '64px' : '70px',
                     borderRadius: '16px',
                     background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(244, 114, 182, 0.15) 100%)',
                     border: '1px solid rgba(236, 72, 153, 0.2)',
@@ -409,7 +751,7 @@ const Capabilities = () => {
                   />
                   <span style={{ position: 'relative', zIndex: 1 }}>
                     {React.cloneElement(capability.icon, { 
-                      size: isMobile ? 24 : (isTablet ? 28 : 30),
+                      size: isTablet ? 28 : 30,
                       strokeWidth: 1.5
                     })}
                   </span>
@@ -417,9 +759,9 @@ const Capabilities = () => {
 
                 {/* Title */}
                 <h5 style={{
-                  fontSize: isMobile ? '1.1rem' : (isTablet ? '1.2rem' : '1.3rem'),
+                  fontSize: isTablet ? '1.2rem' : '1.3rem',
                   fontWeight: 600,
-                  marginBottom: isMobile ? '12px' : '14px',
+                  marginBottom: '14px',
                   color: 'rgba(255, 255, 255, 0.95)',
                   lineHeight: '1.3',
                   letterSpacing: '-0.01em'
@@ -429,7 +771,7 @@ const Capabilities = () => {
 
                 {/* Description */}
                 <p style={{
-                  fontSize: isMobile ? '0.875rem' : (isTablet ? '0.9rem' : '0.95rem'),
+                  fontSize: isTablet ? '0.9rem' : '0.95rem',
                   lineHeight: '1.7',
                   color: 'rgba(255, 255, 255, 0.7)',
                   margin: 0
@@ -457,8 +799,9 @@ const Capabilities = () => {
                 }}
               />
             </motion.div>
-          ))}
-        </motion.div>
+            ))}
+          </motion.div>
+        )}
       </div>
     </section>
   );

@@ -1,11 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Linkedin, Twitter, Github, Instagram, Send } from 'lucide-react';
+import { useLenisContext } from '../../contexts/LenisContext';
 
 const Footer = () => {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const isTablet = typeof window !== 'undefined' && window.innerWidth >= 768 && window.innerWidth < 1024;
   const canvasRef = useRef(null);
+  const lenis = useLenisContext();
 
   // Animated light beam on top edge using canvas
   useEffect(() => {
@@ -97,7 +99,15 @@ const Footer = () => {
   const scrollToSection = (href) => {
     const element = document.querySelector(href);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (lenis && typeof lenis.scrollTo === 'function') {
+        try {
+          lenis.scrollTo(element, { duration: 1.2, offset: -80 });
+        } catch (error) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   };
 

@@ -3,9 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Brain, Briefcase, Globe, Smartphone, Cloud } from 'lucide-react';
 import Button from '../UI/Button';
 import { SparklesCore } from '../UI/Sparkles';
+import { useLenisContext } from '../../contexts/LenisContext';
+import SelectionItems from '../UI/SelectionItems';
 
 const Services = () => {
   const [activeTab, setActiveTab] = useState('agentic');
+  const lenis = useLenisContext();
 
   const services = {
     agentic: {
@@ -50,7 +53,7 @@ const Services = () => {
   ];
 
   const activeService = services[activeTab];
-
+  
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   
   return (
@@ -72,116 +75,28 @@ const Services = () => {
           </div>
         </div>
 
-        <div style={{ 
-          display: 'flex', 
-          marginBottom: '24px', 
-          width: '100%'
-        }}>
-          <div className="tabs services-tabs" role="tablist" style={{ 
-            display: 'flex',
-            gap: isMobile ? '4px' : '6px',
-            background: 'rgba(255, 255, 255, 0.06)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            padding: isMobile ? '4px' : '6px',
-            borderRadius: isMobile ? '16px' : '999px',
-            backdropFilter: 'blur(14px)',
-            WebkitBackdropFilter: 'blur(14px)',
-            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.1)',
-            position: 'relative',
-            overflow: isMobile ? 'auto' : 'hidden',
-            flexWrap: isMobile ? 'wrap' : 'nowrap',
-            width: '100%',
-            justifyContent: 'flex-start',
-            alignItems: 'stretch',
-            flexShrink: 0,
-            WebkitOverflowScrolling: 'touch',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none'
-          }}>
-            {tabs.map((tab) => (
-              <motion.button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                data-tab={tab.id}
-                className="service-tab"
-                style={{
-                  position: 'relative',
-                  border: 'none',
-                  background: 'transparent',
-                  color: activeTab === tab.id ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.7)',
-                  padding: isMobile ? '10px 8px' : '12px 16px',
-                  borderRadius: '999px',
-                  fontWeight: 600,
-                  fontSize: isMobile ? '10px' : '13px',
-                  fontFamily: "'Lemon Milk', sans-serif",
-                  cursor: 'pointer',
-                  transition: 'color 0.3s ease',
-                  zIndex: 1,
-                  whiteSpace: 'normal',
-                  flex: '1 1 0',
-                  minWidth: 0,
-                  minHeight: isMobile ? '44px' : 'auto',
-                  height: 'auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  lineHeight: '1.3',
-                  textAlign: 'center',
-                  wordBreak: 'break-word',
-                  overflowWrap: 'break-word',
-                  hyphens: 'auto'
-                }}
-                whileHover={{ color: 'rgba(255, 255, 255, 0.95)' }}
-              >
-                {activeTab === tab.id && (
-                  <motion.div
-                    layoutId="activeServiceTab"
-                    className="active-tab-bg"
-                    style={{
-                      position: 'absolute',
-                      top: isMobile ? '4px' : '6px',
-                      left: isMobile ? '4px' : '6px',
-                      right: isMobile ? '4px' : '6px',
-                      bottom: isMobile ? '4px' : '6px',
-                      backdropFilter: 'blur(14px)',
-                      WebkitBackdropFilter: 'blur(14px)',
-                      background: 'rgba(255, 255, 255, 0.15)',
-                      borderRadius: '999px',
-                      border: '1px solid rgba(255, 255, 255, 0.25)',
-                      boxShadow: '0 8px 32px 0 rgba(255, 255, 255, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
-                      zIndex: -1,
-                      minHeight: 'calc(100% - 8px)'
-                    }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                  />
-                )}
-                <motion.div
-                  layoutId={activeTab !== tab.id ? "hoverServiceTab" : undefined}
-                  className={`tab-hover-glass ${activeTab === tab.id ? 'active-tab-hover' : ''}`}
-                    style={{
-                      position: 'absolute',
-                      top: isMobile ? '4px' : '6px',
-                      left: isMobile ? '4px' : '6px',
-                      right: isMobile ? '4px' : '6px',
-                      bottom: isMobile ? '4px' : '6px',
-                      backdropFilter: 'blur(14px)',
-                      WebkitBackdropFilter: 'blur(14px)',
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      borderRadius: '999px',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      zIndex: activeTab === tab.id ? -2 : -1,
-                      pointerEvents: 'none',
-                      opacity: 0,
-                      minHeight: 'calc(100% - 8px)'
-                    }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                />
-                <span style={{ position: 'relative', zIndex: 2 }}>
-                  {tab.label}
-                </span>
-              </motion.button>
-            ))}
-          </div>
+        <div style={{ marginBottom: '24px' }}>
+          <SelectionItems
+            items={tabs}
+            activeId={activeTab}
+            onItemClick={(item) => setActiveTab(item.id)}
+            layoutId="activeServiceTab"
+            containerStyle={{ 
+              marginBottom: '0',
+              width: '100%'
+            }}
+            innerStyle={{
+              width: '100%',
+              flex: isMobile ? '0 0 auto' : '1 1 0'
+            }}
+            itemStyle={{
+              padding: '10px 14px',
+              fontSize: '12px',
+              maxWidth: '100%',
+              flex: isMobile ? '0 0 auto' : '1 1 0',
+              flexShrink: 1
+            }}
+          />
         </div>
 
         <div style={{ 
@@ -251,7 +166,15 @@ const Services = () => {
                       onClick={() => {
                         const contactSection = document.querySelector('#contact');
                         if (contactSection) {
-                          contactSection.scrollIntoView({ behavior: 'smooth' });
+                          if (lenis && typeof lenis.scrollTo === 'function') {
+                            try {
+                              lenis.scrollTo(contactSection, { duration: 1.2, offset: -80 });
+                            } catch (error) {
+                              contactSection.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          } else {
+                            contactSection.scrollIntoView({ behavior: 'smooth' });
+                          }
                         }
                       }}
                     >
@@ -263,7 +186,15 @@ const Services = () => {
                       onClick={() => {
                         const workSection = document.querySelector('#work');
                         if (workSection) {
-                          workSection.scrollIntoView({ behavior: 'smooth' });
+                          if (lenis && typeof lenis.scrollTo === 'function') {
+                            try {
+                              lenis.scrollTo(workSection, { duration: 1.2, offset: -80 });
+                            } catch (error) {
+                              workSection.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          } else {
+                            workSection.scrollIntoView({ behavior: 'smooth' });
+                          }
                         }
                       }}
                     >

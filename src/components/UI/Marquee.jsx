@@ -87,6 +87,10 @@ export function Marquee({
           gap: 'var(--gap)',
           animation: `${animationName} ${duration} linear infinite ${reverse ? 'reverse' : 'normal'}`,
           willChange: 'transform',
+          transform: 'translateZ(0)',
+          WebkitTransform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
         }}
       >
         {duplicatedChildren}

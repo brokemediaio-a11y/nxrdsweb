@@ -1,5 +1,4 @@
 import React from 'react';
-import Navbar from '../Navigation/Navbar';
 import Footer from '../Footer/Footer';
 
 const Layout = ({ children }) => {
@@ -12,8 +11,12 @@ const Layout = ({ children }) => {
       width: '100%'
     }}>
       <div className="void-bg"></div>
-      <Navbar />
-      <main style={{ width: '100%', overflowX: 'hidden' }}>
+      {/* Navbar moved to App.tsx - outside Lenis */}
+      <main style={{ 
+        width: '100%', 
+        overflowX: 'hidden',
+        paddingTop: '80px' // Space for fixed navbar
+      }}>
         {children}
       </main>
       <Footer />

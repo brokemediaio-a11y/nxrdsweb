@@ -2,9 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { fadeInLeft, fadeInUp } from '../../utils/animations';
 import Button from '../UI/Button';
+import { useLenisContext } from '../../contexts/LenisContext';
 
 const HeroText = () => {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const lenis = useLenisContext();
   
   return (
     <div style={{ textAlign: 'center', maxWidth: '100%', width: '100%' }}>
@@ -73,7 +75,15 @@ const HeroText = () => {
           onClick={() => {
             const contactSection = document.querySelector('#contact');
             if (contactSection) {
-              contactSection.scrollIntoView({ behavior: 'smooth' });
+              if (lenis && typeof lenis.scrollTo === 'function') {
+                try {
+                  lenis.scrollTo(contactSection, { duration: 1.2, offset: -80 });
+                } catch (error) {
+                  contactSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              } else {
+                contactSection.scrollIntoView({ behavior: 'smooth' });
+              }
             }
           }}
         >
