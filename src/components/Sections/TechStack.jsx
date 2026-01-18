@@ -6,7 +6,6 @@ import { SparklesCore } from '../UI/Sparkles';
 const TechStack = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -28,28 +27,28 @@ const TechStack = () => {
 
   // Row 1 - scrolls left to right (→)
   const row1Logos = [
-    'n8n.svg',
-    'react.svg',
-    'mongodb.svg',
-    'nextjs.svg',
-    'postgresql.svg',
-    'python.svg',
-    'fastapi.svg',
-    'nodejs.svg'
+    'n8n.webp',
+    'react.webp',
+    'mongodb.webp',
+    'nextjs.webp',
+    'postgresql.webp',
+    'python.webp',
+    'fastapi.webp',
+    'nodejs.webp'
   ];
 
   // Row 2 - scrolls right to left (←)
   const row2Logos = [
-    'jupyter.svg',
-    'colab.svg',
-    'vuejs.svg',
-    'twilio.svg',
-    'elevenlabs.svg',
-    'cal-com.svg',
-    'openai.svg',
-    'google-workspace.svg',
-    'aws.svg',
-    'hostinger.svg'
+    'jupyter.webp',
+    'colab.webp',
+    'vuejs.webp',
+    'twilio.webp',
+    'elevenlabs.webp',
+    'cal-com.webp',
+    'openai.webp',
+    'google-workspace.webp',
+    'aws.webp',
+    'hostinger.webp'
   ];
 
   const CarouselRow = ({ logos, direction, speed }) => {
@@ -78,8 +77,6 @@ const TechStack = () => {
           width: '100%',
           minHeight: isMobile ? '100px' : '120px'
         }}
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
       >
         <motion.div
           style={{
@@ -91,9 +88,9 @@ const TechStack = () => {
             width: 'max-content',
             height: '100%'
           }}
-          animate={!isPaused ? {
+          animate={{
             x: animateX
-          } : {}}
+          }}
           transition={{
             x: {
               repeat: Infinity,
@@ -158,23 +155,9 @@ const TechStack = () => {
                     objectFit: 'contain',
                     filter: 'brightness(0.95)',
                     opacity: 0.9,
-                    transition: 'all 0.3s ease',
                     cursor: 'default',
-                    display: 'block'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (e.target.style.display !== 'none') {
-                      e.target.style.filter = 'brightness(1.1)';
-                      e.target.style.opacity = '1';
-                      e.target.style.transform = 'scale(1.05)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (e.target.style.display !== 'none') {
-                      e.target.style.filter = 'brightness(0.95)';
-                      e.target.style.opacity = '0.9';
-                      e.target.style.transform = 'scale(1)';
-                    }
+                    display: 'block',
+                    pointerEvents: 'none'
                   }}
                 />
               </div>

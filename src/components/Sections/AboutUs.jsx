@@ -42,15 +42,18 @@ const AboutUs = () => {
   const founders = [
     {
       name: 'Sobaan Mahmood',
-      position: 'Co-Founder'
+      position: 'Co-Founder',
+      image: '/founders/PicsArt_07-15-04.41.13-1-e1734019477209-730x1024.jpg'
     },
     {
       name: 'Chaudhary Shahzaib Awais',
-      position: 'Co-Founder'
+      position: 'Co-Founder',
+      image: '/founders/IMG_7988-scaled-e1734019355244.jpg'
     },
     {
       name: 'Saad Hassan Butt',
-      position: 'Co-Founder'
+      position: 'Co-Founder',
+      image: '/founders/8f63633b-6cc3-4605-8a10-644e7c244a0e.jpg'
     }
   ];
 
@@ -935,7 +938,7 @@ const AboutUs = () => {
                         />
 
                         <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                          {/* 3D Person Icon */}
+                          {/* Founder Image */}
                           <motion.div
                             style={{
                               width: '120px',
@@ -950,7 +953,8 @@ const AboutUs = () => {
                               border: '2px solid rgba(236, 72, 153, 0.3)',
                               boxShadow: '0 8px 32px rgba(236, 72, 153, 0.3), inset 0 0 30px rgba(236, 72, 153, 0.1), 0 0 60px rgba(244, 114, 182, 0.2)',
                               transformStyle: 'preserve-3d',
-                              perspective: '1000px'
+                              perspective: '1000px',
+                              overflow: 'hidden'
                             }}
                             whileHover={{ 
                               scale: 1.05, 
@@ -968,35 +972,24 @@ const AboutUs = () => {
                                 borderRadius: '50%',
                                 background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 70%)',
                                 filter: 'blur(20px)',
-                                pointerEvents: 'none'
+                                pointerEvents: 'none',
+                                zIndex: 1
                               }}
                             />
                             
-                            {/* 3D Icon */}
-                            <motion.div
+                            {/* Founder Photo */}
+                            <img
+                              src={founder.image}
+                              alt={founder.name}
                               style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                borderRadius: '50%',
                                 position: 'relative',
-                                zIndex: 1,
-                                color: '#ec4899',
-                                filter: 'drop-shadow(0 4px 8px rgba(236, 72, 153, 0.4))'
+                                zIndex: 2
                               }}
-                              animate={{
-                                y: [0, -5, 0],
-                              }}
-                              transition={{
-                                duration: 3,
-                                repeat: Infinity,
-                                ease: 'easeInOut'
-                              }}
-                            >
-                              <User 
-                                size={60} 
-                                strokeWidth={1.5}
-                                style={{
-                                  filter: 'drop-shadow(0 2px 4px rgba(236, 72, 153, 0.5))'
-                                }}
-                              />
-                            </motion.div>
+                            />
 
                             {/* Outer ring glow */}
                             <motion.div
@@ -1006,7 +999,8 @@ const AboutUs = () => {
                                 borderRadius: '50%',
                                 border: '2px solid rgba(236, 72, 153, 0.2)',
                                 pointerEvents: 'none',
-                                opacity: 0
+                                opacity: 0,
+                                zIndex: 3
                               }}
                               whileHover={{
                                 opacity: 1,

@@ -50,10 +50,15 @@ export const LenisProvider = ({ children }) => {
           // Don't set wrapper/content - let it use window/documentElement by default
           // This allows fixed elements to stay fixed
           prevent: (node) => {
-            // Prevent Lenis from transforming the navbar
-            return node.classList.contains('navbar') || 
-                   node.closest('.navbar') !== null ||
-                   node.hasAttribute('data-lenis-prevent');
+            // Prevent Lenis from transforming the navbar - be very explicit
+            const isNavbar = node.classList && (
+              node.classList.contains('navbar') || 
+              node.classList.contains('sticky-navbar')
+            );
+            const hasNavbarParent = node.closest && node.closest('.navbar') !== null;
+            const hasPreventAttr = node.hasAttribute && node.hasAttribute('data-lenis-prevent');
+            
+            return isNavbar || hasNavbarParent || hasPreventAttr;
           },
         });
 

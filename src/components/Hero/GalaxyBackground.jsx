@@ -1,9 +1,7 @@
 import React, { memo, useEffect, useRef } from 'react';
-import { useScrollPerformance } from '../../hooks/useScrollPerformance';
 
 const GalaxyBackground = () => {
   const canvasRef = useRef(null);
-  const isScrolling = useScrollPerformance();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -147,25 +145,10 @@ const GalaxyBackground = () => {
       }
     };
 
-    // Animation loop - pause during scroll to prevent jitter
+    // Animation loop - continuous animation, unaffected by scroll
     let lastFrameTime = performance.now();
-    let isPaused = false;
     
     const animate = (currentTime) => {
-      // During active scroll: completely pause animation to prevent jitter
-      if (isScrolling) {
-        isPaused = true;
-        // Still request frames but don't update - keeps last frame visible
-        animationFrameId = requestAnimationFrame(animate);
-        return;
-      }
-      
-      // Resume animation when scroll stops
-      if (isPaused) {
-        isPaused = false;
-        lastFrameTime = currentTime; // Reset time to prevent jumps
-      }
-      
       const timeSinceLastFrame = currentTime - lastFrameTime;
       lastFrameTime = currentTime;
 
@@ -177,7 +160,7 @@ const GalaxyBackground = () => {
       // Clear canvas using display dimensions
       ctx.clearRect(0, 0, displayWidth, displayHeight);
 
-      // Update and draw all particles
+      // Update and draw all particles (always animate, regardless of scroll)
       particles.forEach(particle => {
         particle.update();
         particle.draw();
@@ -198,7 +181,7 @@ const GalaxyBackground = () => {
       window.removeEventListener('resize', resizeCanvas);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isScrolling]);
+  }, []);
 
   return (
     <>

@@ -48,8 +48,9 @@ function App() {
 
   return (
     <LenisProvider>
+      {/* Navbar uses portal to render in document.body but needs Lenis context for scrollTo */}
+      <Navbar />
       <div style={{ position: 'relative', zIndex: 1 }}>
-        <Navbar />
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

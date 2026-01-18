@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import GalaxyBackground from './GalaxyBackground';
 import HeroText from './HeroText';
-import LaserBeamCanvas from './LaserBeamCanvas';
 import { isMobile } from '../../utils/animations';
 
 const Hero = () => {
@@ -23,23 +22,6 @@ const Hero = () => {
     }}>
       {/* Galaxy Background - z-index: 1 */}
       <GalaxyBackground />
-      
-      {/* Hero Effects Wrapper - z-index: 4 */}
-      <div className="hero-effects" style={{
-        position: 'absolute',
-        inset: 0,
-        zIndex: 4,
-        pointerEvents: 'none',
-        overflow: 'hidden',
-        // Isolate canvas animations from scroll
-        isolation: 'isolate',
-        contain: 'layout style paint',
-        transform: 'translateZ(0)',
-        WebkitTransform: 'translateZ(0)',
-      }}>
-        {/* Laser Beam Canvas Animation */}
-        <LaserBeamCanvas />
-      </div>
       
       <div className="container" style={{ 
         position: 'relative', 
