@@ -17,6 +17,8 @@ import ClientSpeak from './components/Sections/ClientSpeak';
 import AboutUs from './components/Sections/AboutUs';
 // @ts-ignore
 import Contact from './components/Sections/Contact';
+// @ts-ignore
+import TechStack from './components/Sections/TechStack';
 
 function App() {
 
@@ -46,26 +48,31 @@ function App() {
 
   return (
     <LenisProvider>
-      <Navbar />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        style={{
-          willChange: 'opacity',
-          transform: 'translateZ(0)',
-          WebkitTransform: 'translateZ(0)',
-        }}
-      >
-        <Layout>
-          <Hero />
-          <Services />
-          <Capabilities />
-          <AboutUs />
-          <ClientSpeak />
-          <Contact />
-        </Layout>
-      </motion.div>
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <Navbar />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          style={{
+            willChange: 'opacity',
+            transform: 'translateZ(0)',
+            WebkitTransform: 'translateZ(0)',
+            position: 'relative',
+            zIndex: 1
+          }}
+        >
+          <Layout>
+            <Hero />
+            <Services />
+            <Capabilities />
+            <TechStack />
+            <AboutUs />
+            <ClientSpeak />
+            <Contact />
+          </Layout>
+        </motion.div>
+      </div>
     </LenisProvider>
   );
 }

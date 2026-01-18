@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useLenisContext } from '../../contexts/LenisContext';
 import SelectionItems from '../UI/SelectionItems';
@@ -7,131 +7,44 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [activeLink, setActiveLink] = useState('Home');
-  const [scrollbarWidth, setScrollbarWidth] = useState(0);
+  const [navHeight, setNavHeight] = useState(0);
+  const navRef = useRef(null);
   const lenis = useLenisContext();
 
   useEffect(() => {
-    let lastScrollY = 0;
-    let rafId = null;
-    let lastUpdateTime = 0;
-    const THROTTLE_MS = 16; // ~60fps max update rate
-    
-    const updateNavbar = (scrollY) => {
-      // Only update scrolled state for styling changes
-      setIsScrolled(scrollY > 50);
-      lastScrollY = scrollY;
-    };
-    
-    if (lenis && typeof lenis.on === 'function') {
-      // Use Lenis scroll events
-      const handleLenisScroll = ({ scroll, limit, velocity, direction, progress }) => {
-        const now = performance.now();
-        
-        if (now - lastUpdateTime < THROTTLE_MS) {
-          return;
-        }
-        
-        if (rafId) {
-          cancelAnimationFrame(rafId);
-        }
-        
-        rafId = requestAnimationFrame(() => {
-          updateNavbar(scroll);
-          lastUpdateTime = now;
-          rafId = null;
-        });
-      };
-      
-      try {
-        lenis.on('scroll', handleLenisScroll);
-        
-        // Initial update
-        if (lenis.scroll !== undefined) {
-          updateNavbar(lenis.scroll);
-        }
-      } catch (error) {
-        console.warn('Error setting up Lenis scroll listener:', error);
+    // Calculate navbar height
+    const updateNavHeight = () => {
+      if (navRef.current) {
+        setNavHeight(navRef.current.offsetHeight);
       }
-      
-      return () => {
-        try {
-          if (lenis && typeof lenis.off === 'function') {
-            lenis.off('scroll', handleLenisScroll);
-          }
-        } catch (error) {
-          console.warn('Error removing Lenis scroll listener:', error);
-        }
-        if (rafId) {
-          cancelAnimationFrame(rafId);
-        }
-      };
-    } else {
-      // Fallback to native scroll
-      const handleScroll = () => {
-        const now = performance.now();
-        
-        if (now - lastUpdateTime < THROTTLE_MS) {
-          return;
-        }
-        
-        if (rafId) {
-          cancelAnimationFrame(rafId);
-        }
-        
-        rafId = requestAnimationFrame(() => {
-          const currentScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-          updateNavbar(currentScrollY);
-          lastUpdateTime = now;
-          rafId = null;
-        });
-      };
-      
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-        if (rafId) {
-          cancelAnimationFrame(rafId);
-        }
-      };
-    }
+    };
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
 
     const handleResize = () => {
-      const mobile = window.innerWidth < 768;
+      const mobile = window.innerWidth < 992;
       setIsMobile(mobile);
-    };
-
-    // Calculate scrollbar width
-    const calculateScrollbarWidth = () => {
-      const outer = document.createElement('div');
-      outer.style.visibility = 'hidden';
-      outer.style.overflow = 'scroll';
-      outer.style.msOverflowStyle = 'scrollbar';
-      document.body.appendChild(outer);
-      
-      const inner = document.createElement('div');
-      outer.appendChild(inner);
-      
-      const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
-      outer.parentNode?.removeChild(outer);
-      setScrollbarWidth(scrollbarWidth);
+      updateNavHeight();
     };
 
     // Initialize on mount
     handleResize();
-    calculateScrollbarWidth();
+    handleScroll();
+    updateNavHeight();
     
-    window.addEventListener('resize', () => {
-      handleResize();
-      calculateScrollbarWidth();
-    });
+    // Update height after a small delay to ensure render
+    const heightTimer = setTimeout(updateNavHeight, 100);
+    
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
     return () => {
+      clearTimeout(heightTimer);
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
     };
-  }, [lenis]);
+  }, [isScrolled, isMobile]);
 
   const navLinks = [
     { name: 'Services', href: '#services' },
@@ -144,27 +57,11 @@ const Navbar = () => {
   const scrollToSection = (href, name) => {
     setActiveLink(name);
     if (href === '#') {
-      if (lenis && typeof lenis.scrollTo === 'function') {
-        try {
-          lenis.scrollTo(0, { duration: 1.2 });
-        } catch (error) {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       const element = document.querySelector(href);
       if (element) {
-        if (lenis && typeof lenis.scrollTo === 'function') {
-          try {
-            lenis.scrollTo(element, { duration: 1.2, offset: -80 });
-          } catch (error) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
-        } else {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
+        element.scrollIntoView({ behavior: 'smooth' });
       }
     }
   };
@@ -172,28 +69,29 @@ const Navbar = () => {
   return (
     <>
       <nav 
-        className="navbar navbar-expand-lg" 
-        data-lenis-prevent 
+        ref={navRef}
+        className="navbar navbar-expand-lg sticky-navbar" 
+        data-lenis-prevent
         style={{ 
           position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
           width: '100%',
-          paddingTop: isScrolled ? '16px' : '20px', 
-          paddingBottom: isMobile ? (isScrolled ? '5px' : '7px') : (isScrolled ? '16px' : '20px'),
-          transition: 'padding 0.3s ease, background-color 0.3s ease',
-          zIndex: 99999,
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          backgroundColor: isScrolled ? 'rgba(5,5,6,.95)' : 'rgba(5,5,6,.9)',
-          borderBottom: '1px solid rgba(255,255,255,.08)',
+          paddingTop: isScrolled ? '8px' : '10px', 
+          paddingBottom: isScrolled ? '8px' : '10px',
+          transition: 'all 0.3s ease',
+          zIndex: 999999,
+          backdropFilter: 'blur(14px)',
+          WebkitBackdropFilter: 'blur(14px)',
+          backgroundColor: isScrolled ? 'rgba(5,5,6,.85)' : 'rgba(5,5,6,.75)',
+          borderBottom: '1px solid rgba(255,255,255,.06)',
           boxSizing: 'border-box',
           transform: 'translate3d(0, 0, 0)',
           WebkitTransform: 'translate3d(0, 0, 0)',
-          backfaceVisibility: 'hidden',
-          WebkitBackfaceVisibility: 'hidden',
-          willChange: 'auto'
+          pointerEvents: 'auto',
+          visibility: 'visible',
+          opacity: 1
         }}
       >
         <div className="container" style={{ 
@@ -274,6 +172,8 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
+      {/* Spacer to prevent content from going under fixed navbar */}
+      <div style={{ height: `${navHeight}px`, width: '100%' }} />
     </>
   );
 };

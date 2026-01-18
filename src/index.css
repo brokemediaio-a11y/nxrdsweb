@@ -81,8 +81,8 @@ html.lenis, html.lenis body {
 }
 
 /* Ensure navbar stays fixed and not transformed by Lenis */
-.navbar,
-[data-lenis-prevent].navbar {
+.navbar.sticky-navbar,
+[data-lenis-prevent].navbar.sticky-navbar {
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
@@ -90,7 +90,10 @@ html.lenis, html.lenis body {
   transform: translate3d(0, 0, 0) !important;
   -webkit-transform: translate3d(0, 0, 0) !important;
   will-change: auto !important;
-  z-index: 99999 !important;
+  z-index: 999999 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 html, body { 
@@ -182,7 +185,7 @@ body {
 }
 
 /* --- Nav --- */
-.navbar {
+.navbar.sticky-navbar {
   backdrop-filter: blur(14px);
   background: rgba(5,5,6,.35);
   border-bottom: 1px solid rgba(255,255,255,.06);
@@ -191,7 +194,7 @@ body {
   left: 0 !important;
   right: 0 !important;
   width: 100% !important;
-  z-index: 99999 !important;
+  z-index: 999999 !important;
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
