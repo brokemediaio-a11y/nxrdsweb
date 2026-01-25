@@ -1,21 +1,31 @@
-import React, { Component } from 'react';
+import React, { Component, type ReactNode } from 'react';
 
-class ErrorBoundary extends Component {
-  constructor(props) {
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+  errorInfo: React.ErrorInfo | null;
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null, errorInfo: null };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     console.error('Error caught by boundary:', error, errorInfo);
     this.setState({ errorInfo });
   }
 
-  render() {
+  render(): ReactNode {
     if (this.state.hasError) {
       return (
         <div style={{
@@ -31,12 +41,10 @@ class ErrorBoundary extends Component {
         }}>
           <h1 style={{ color: '#ec4899', marginBottom: '20px' }}>Something went wrong</h1>
           <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '20px' }}>
-            {this.state.error?.message || 'An unexpected error occurred'}
+            {this.state.error?.message ?? 'An unexpected error occurred'}
           </p>
           <button
-            onClick={() => {
-              window.location.reload();
-            }}
+            onClick={() => { window.location.reload(); }}
             style={{
               padding: '12px 24px',
               background: '#ec4899',
