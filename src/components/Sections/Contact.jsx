@@ -64,12 +64,12 @@ export default function Contact() {
           'border-white/10 bg-white/5'
         )}>
           <div className="grid grid-cols-1 md:grid-cols-2">
-            {/* Globe Container - First on Mobile, Second on Desktop */}
+            {/* Globe Container - Second on Mobile, Second on Desktop */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
               transition={{ duration: 0.5, delay: 0.5 }}
-              className="relative my-8 flex items-center justify-center overflow-hidden pr-8 order-1 md:order-2"
+              className="relative my-8 flex items-center justify-center overflow-hidden pr-8 order-2 md:order-2"
             >
               <div className="flex flex-col items-center justify-center overflow-hidden">
                 <article className={cn(
@@ -95,8 +95,8 @@ export default function Contact() {
               </div>
             </motion.div>
 
-            {/* Contact Form - Second on Mobile, First on Desktop */}
-            <div className="relative p-4 sm:p-6 md:p-10 order-2 md:order-1" ref={formRef} style={{ width: '100%', maxWidth: '100%' }}>
+            {/* Contact Form - First on Mobile, First on Desktop */}
+            <div className="relative p-4 sm:p-6 md:p-10 order-1 md:order-1" ref={formRef} style={{ width: '100%', maxWidth: '100%' }}>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={

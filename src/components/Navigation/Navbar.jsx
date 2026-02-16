@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 import { useLenisContext } from '../../contexts/LenisContext';
 import SelectionItems from '../UI/SelectionItems';
+import Button from '../UI/Button';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -186,12 +187,13 @@ const Navbar = () => {
         padding: isMobile ? '0 12px' : '0 24px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: isMobile ? 'space-between' : 'space-between',
         width: '100%',
         position: 'relative',
         gap: isMobile ? '8px' : '0',
         flexWrap: 'nowrap'
       }}>
+        {/* Logo - Left side */}
         <a 
           className="navbar-brand" 
           href="#" 
@@ -205,40 +207,33 @@ const Navbar = () => {
             alignItems: 'center',
             gap: '12px',
             flexShrink: 0,
-            zIndex: 1001
+            zIndex: 1001,
+            flex: isMobile ? '0 0 auto' : '0 0 auto'
           }}
         >
-          <img src="/nexordis-logo-1.png" alt="NEXORDIS" style={{ 
-            height: isMobile ? '32px' : '38px',
+          <img src="/complete%20logowithout%20background.png" alt="NEXORDIS" style={{ 
+            height: isMobile ? '38px' : '50px',
             width: 'auto',
             objectFit: 'contain',
             filter: 'drop-shadow(0 0 18px rgba(236,72,153,.55))',
             transition: 'all 0.3s ease'
           }} />
-          <span style={{
-            fontFamily: "'Azonix', sans-serif",
-            fontSize: isMobile ? '18px' : '22px',
-            fontWeight: 'normal',
-            letterSpacing: '0.15em',
-            color: '#ffffff',
-            textTransform: 'uppercase',
-            whiteSpace: 'nowrap'
-          }}>
-            NEXORDIS
-          </span>
         </a>
 
-        {/* Navigation - Always visible, horizontally scrollable on mobile */}
+        {/* Navigation - Centered on desktop, right-aligned on mobile */}
         <div className="navbar-collapse" style={{ 
           display: 'flex', 
           flexDirection: 'row', 
           alignItems: 'center',
-          justifyContent: 'flex-end',
+          justifyContent: isMobile ? 'flex-end' : 'center',
           gap: '0',
-          position: 'relative',
+          position: isMobile ? 'relative' : 'absolute',
+          left: isMobile ? 'auto' : '50%',
+          transform: isMobile ? 'none' : 'translateX(-50%)',
           width: 'auto',
-          flex: '1 1 auto',
-          minWidth: 0
+          flex: isMobile ? '1 1 auto' : 'none',
+          minWidth: 0,
+          zIndex: 1000
         }}>
           <SelectionItems
             items={navLinks.map(link => ({ 
@@ -256,6 +251,29 @@ const Navbar = () => {
             }}
           />
         </div>
+
+        {/* Get in touch button - Right side (Desktop only) */}
+        {!isMobile && (
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            flexShrink: 0,
+            zIndex: 1001,
+            marginLeft: 'auto'
+          }}>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection('#contact', 'Contact');
+              }}
+            >
+              Get in touch
+            </Button>
+          </div>
+        )}
       </div>
     </nav>
   );

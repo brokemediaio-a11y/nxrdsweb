@@ -81,8 +81,11 @@ html.lenis, html.lenis body {
 }
 
 /* CRITICAL: Prevent Lenis from adding transforms to html/body that break position:fixed */
+/* These rules MUST come before any other html/body transform rules */
+html,
 html.lenis,
 html.lenis-smooth,
+body,
 body.lenis,
 body.lenis-smooth {
   transform: none !important;
@@ -90,6 +93,10 @@ body.lenis-smooth {
   -moz-transform: none !important;
   -ms-transform: none !important;
   -o-transform: none !important;
+  perspective: none !important;
+  -webkit-perspective: none !important;
+  -moz-perspective: none !important;
+  -ms-perspective: none !important;
 }
 
 /* Ensure navbar stays fixed and not transformed by Lenis - HIGHEST PRIORITY */
@@ -427,20 +434,22 @@ body {
 }
 
 /* GPU acceleration for smooth scrolling */
+/* CRITICAL: Removed transforms and perspective from html/body as they break position:fixed */
+/* These create containing blocks that prevent fixed elements from working correctly */
 html {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
+  /* transform: translateZ(0); REMOVED - breaks position:fixed */
+  /* -webkit-transform: translateZ(0); REMOVED - breaks position:fixed */
 }
 
 body {
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
+  /* transform: translateZ(0); REMOVED - breaks position:fixed */
+  /* -webkit-transform: translateZ(0); REMOVED - breaks position:fixed */
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  perspective: 1000px;
-  -webkit-perspective: 1000px;
+  /* perspective: 1000px; REMOVED - breaks position:fixed */
+  /* -webkit-perspective: 1000px; REMOVED - breaks position:fixed */
 }
 
 /* Optimize canvas elements during scroll - Lenis compatible */
