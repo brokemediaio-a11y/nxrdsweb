@@ -8,6 +8,7 @@ import Button from '../UI/Button';
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState('Home');
   const [navHeight, setNavHeight] = useState(0);
   const navRef = useRef(null);
@@ -28,6 +29,10 @@ const Navbar = () => {
     const handleResize = () => {
       const mobile = window.innerWidth < 992;
       setIsMobile(mobile);
+      // Close mobile menu automatically when switching to desktop
+      if (!mobile) {
+        setIsMenuOpen(false);
+      }
       updateNavHeight();
     };
 
@@ -133,6 +138,10 @@ const Navbar = () => {
 
   const scrollToSection = (href, name) => {
     setActiveLink(name);
+    // Close mobile menu after navigation
+    if (isMobile) {
+      setIsMenuOpen(false);
+    }
     if (href === '#') {
       if (lenis && typeof lenis.scrollTo === 'function') {
         lenis.scrollTo(0, { duration: 1.2 });
@@ -149,6 +158,13 @@ const Navbar = () => {
         }
       }
     }
+  };
+
+  const burgerLineStyle = {
+    width: '18px',
+    height: '2px',
+    borderRadius: '999px',
+    backgroundColor: 'rgba(255,255,255,0.9)',
   };
 
   // Navbar content to be rendered
@@ -220,9 +236,9 @@ const Navbar = () => {
           }} />
         </a>
 
-        {/* Navigation - Centered on desktop, right-aligned on mobile */}
+        {/* Navigation - Centered on desktop */}
         <div className="navbar-collapse" style={{ 
-          display: 'flex', 
+          display: isMobile ? 'none' : 'flex', 
           flexDirection: 'row', 
           alignItems: 'center',
           justifyContent: isMobile ? 'flex-end' : 'center',
@@ -252,16 +268,17 @@ const Navbar = () => {
           />
         </div>
 
-        {/* Get in touch button - Right side (Desktop only) */}
-        {!isMobile && (
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            flexShrink: 0,
-            zIndex: 1001,
-            marginLeft: 'auto'
-          }}>
+        {/* Right-side actions: desktop button or mobile burger menu */}
+        <div style={{ 
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          flexShrink: 0,
+          zIndex: 1001,
+          marginLeft: 'auto'
+        }}>
+          {/* Get in touch button - Desktop only */}
+          {!isMobile && (
             <Button
               variant="primary"
               size="md"
@@ -272,9 +289,100 @@ const Navbar = () => {
             >
               Get in touch
             </Button>
-          </div>
-        )}
+          )}
+
+          {/* Burger menu toggle - Mobile only */}
+          {isMobile && (
+            <button
+              type="button"
+              aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              onClick={() => setIsMenuOpen((prev) => !prev)}
+              style={{
+                marginLeft: '8px',
+                width: '40px',
+                height: '40px',
+                borderRadius: '999px',
+                border: '1px solid rgba(255,255,255,0.18)',
+                background: 'rgba(15,17,22,0.9)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                padding: 0,
+                outline: 'none',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '4px',
+                }}
+              >
+                <span style={burgerLineStyle} />
+                <span style={burgerLineStyle} />
+                <span style={burgerLineStyle} />
+              </div>
+            </button>
+          )}
+        </div>
       </div>
+
+      {/* Mobile dropdown menu */}
+      {isMobile && isMenuOpen && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            padding: '10px 16px 16px',
+            backgroundColor: 'rgba(5,5,6,0.96)',
+            borderBottom: '1px solid rgba(255,255,255,0.08)',
+            boxShadow: '0 18px 45px rgba(0,0,0,0.75)',
+            backdropFilter: 'blur(18px)',
+            WebkitBackdropFilter: 'blur(18px)',
+          }}
+        >
+          <SelectionItems
+            items={navLinks.map(link => ({ 
+              id: link.name, 
+              label: link.name, 
+              href: link.href 
+            }))}
+            activeId={activeLink}
+            onItemClick={(item) => scrollToSection(item.href, item.id)}
+            layoutId="activeNavTabMobile"
+            useAsAnchor={true}
+            containerStyle={{ 
+              marginBottom: '10px',
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              gap: '6px',
+            }}
+          />
+
+          <Button
+            variant="primary"
+            size="md"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection('#contact', 'Contact');
+            }}
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              marginTop: '4px',
+            }}
+          >
+            Get in touch
+          </Button>
+        </div>
+      )}
     </nav>
   );
 

@@ -11,6 +11,12 @@ const Hero = () => {
     <header className="hero" style={{ 
       position: 'relative', 
       overflow: 'hidden',
+      height: mobile ? '100vh' : 'auto',
+      minHeight: mobile ? '100vh' : '70vh',
+      maxHeight: mobile ? '100vh' : 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       willChange: 'auto',
       transform: 'translateZ(0)',
       WebkitTransform: 'translateZ(0)',
@@ -19,6 +25,9 @@ const Hero = () => {
       // Isolate from scroll transforms to prevent jitter
       isolation: 'isolate',
       contain: 'layout style',
+      padding: mobile ? '0' : '80px 0 40px',
+      margin: 0,
+      boxSizing: 'border-box'
     }}>
       {/* Galaxy Background - z-index: 1 */}
       <GalaxyBackground />
@@ -29,10 +38,12 @@ const Hero = () => {
         maxWidth: '1280px',
         margin: '0 auto',
         padding: mobile ? '0 16px' : '0 24px',
-        height: '100%',
+        height: mobile ? '100%' : 'auto',
+        width: '100%',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        boxSizing: 'border-box'
       }}>
         <div style={{ 
           display: 'flex',
@@ -42,10 +53,9 @@ const Hero = () => {
           maxWidth: '1400px',
           width: '100%',
           margin: '0 auto',
-          minHeight: mobile ? 'auto' : '60vh',
-          paddingTop: mobile ? '20px' : '30px',
-          paddingBottom: mobile ? '40px' : '60px',
-          textAlign: 'center'
+          padding: mobile ? '20px 0' : '30px 0 60px',
+          textAlign: 'center',
+          boxSizing: 'border-box'
         }}>
           {/* Hero Text - z-index: 5 */}
           <div style={{ 

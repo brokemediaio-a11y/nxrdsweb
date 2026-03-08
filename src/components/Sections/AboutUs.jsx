@@ -275,8 +275,8 @@ const AboutUs = () => {
             style={{
               backdropFilter: 'blur(40px) saturate(180%)',
               WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.18)',
+              background: 'rgba(10, 10, 12, 0.6)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: '24px',
               padding: isMobile ? '32px' : '48px',
               position: 'relative',
@@ -289,16 +289,16 @@ const AboutUs = () => {
               style={{
                 position: 'absolute',
                 top: '-50%',
-                left: '-50%',
+                right: '-50%',
                 width: '200%',
                 height: '200%',
-                background: 'radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%)',
+                background: 'radial-gradient(circle, rgba(244, 114, 182, 0.15) 0%, transparent 70%)',
                 opacity: 0.6,
                 pointerEvents: 'none'
               }}
               animate={{
-                x: [0, 100, 0],
-                y: [0, 100, 0],
+                x: [0, -100, 0],
+                y: [0, -100, 0],
               }}
               transition={{
                 duration: 20,
@@ -326,7 +326,7 @@ const AboutUs = () => {
               style={{
                 position: 'absolute',
                 top: '20%',
-                left: '10%',
+                right: '10%',
                 width: '60%',
                 height: '40%',
                 background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%)',
@@ -386,8 +386,8 @@ const AboutUs = () => {
             style={{
               backdropFilter: 'blur(40px) saturate(180%)',
               WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.18)',
+              background: 'rgba(10, 10, 12, 0.6)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: '24px',
               padding: isMobile ? '32px' : '48px',
               position: 'relative',
@@ -545,8 +545,8 @@ const AboutUs = () => {
               style={{
                 backdropFilter: 'blur(30px) saturate(180%)',
                 WebkitBackdropFilter: 'blur(30px) saturate(180%)',
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
+                background: 'rgba(10, 10, 12, 0.6)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 borderRadius: '20px',
                 padding: isMobile ? '24px' : '32px',
                 textAlign: 'center',
@@ -619,10 +619,7 @@ const AboutUs = () => {
                     fontSize: isMobile ? '2rem' : '2.5rem',
                     fontWeight: 700,
                     marginBottom: '8px',
-                    background: `linear-gradient(135deg, ${stat.color}, ${stat.color}dd)`,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text'
+                    color: '#ffffff'
                   }}
                   initial={{ scale: 0 }}
                   animate={statsInView ? { scale: 1 } : {}}
@@ -632,7 +629,7 @@ const AboutUs = () => {
                 </motion.div>
                 <p style={{
                   fontSize: isMobile ? '0.875rem' : '1rem',
-                  color: 'rgba(255, 255, 255, 0.7)',
+                  color: 'rgba(255, 255, 255, 0.95)',
                   fontWeight: 500
                 }}>
                   {stat.label}
@@ -723,8 +720,8 @@ const AboutUs = () => {
                 style={{
                   backdropFilter: 'blur(30px) saturate(180%)',
                   WebkitBackdropFilter: 'blur(30px) saturate(180%)',
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  background: 'rgba(10, 10, 12, 0.6)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
                   borderRadius: '20px',
                   padding: '36px',
                   position: 'relative',
@@ -878,8 +875,8 @@ const AboutUs = () => {
                 style={{
                   backdropFilter: 'blur(40px) saturate(180%)',
                   WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  background: 'rgba(10, 10, 12, 0.6)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
                   borderRadius: '24px',
                   padding: isMobile ? '32px 24px' : '40px 32px',
                   position: 'relative',

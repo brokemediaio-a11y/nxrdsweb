@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import emailjs from '@emailjs/browser';
 import { Input } from '../UI/Input';
 import { Textarea } from '../UI/Textarea';
 import Earth from '../UI/Globe';
 import { SparklesCore } from '../UI/Sparkles';
 import { Label } from '../UI/Label';
-import { Check, Loader2 } from 'lucide-react';
+import { Check, Loader2, AlertCircle } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 export default function Contact() {
@@ -15,6 +16,7 @@ export default function Contact() {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState('');
   const [formRef, isInView] = useInView({ 
     once: true, 
     threshold: 0.1,
@@ -24,19 +26,81 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
+
     try {
-      // Perform form submission logic here
-      console.log('Form submitted:', { name, email, message });
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Get EmailJS configuration from environment variables
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const autoReplyTemplateId = 'template_ewzlevo'; // Auto-reply template ID
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      // Validate configuration
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error('EmailJS configuration is missing. Please check your environment variables.');
+      }
+
+      // Prepare template parameters for notification email (to you)
+      const notificationParams = {
+        from_name: name,
+        from_email: email,
+        message: message,
+        to_name: 'Nexordis Team', // Recipient name
+      };
+
+      // Prepare template parameters for auto-reply (to user)
+      const autoReplyParams = {
+        from_name: name,
+        from_email: email,
+        message: message,
+        to_name: name, // User's name for greeting
+      };
+
+      // Send both emails in parallel
+      await Promise.all([
+        // Send notification email to you
+        emailjs.send(
+          serviceId,
+          templateId,
+          notificationParams,
+          publicKey
+        ),
+        // Send auto-reply email to user
+        emailjs.send(
+          serviceId,
+          autoReplyTemplateId,
+          autoReplyParams,
+          publicKey
+        )
+      ]);
+
+      // Reset form on success
       setName('');
       setEmail('');
       setMessage('');
       setIsSubmitted(true);
+      
+      // Reset success message after 5 seconds
       setTimeout(() => {
         setIsSubmitted(false);
       }, 5000);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Error sending email:', error);
+      // Handle different error types
+      let errorMessage = 'Failed to send message. Please try again later.';
+      
+      if (error.text) {
+        errorMessage = error.text;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setError(errorMessage);
+      
+      // Clear error after 5 seconds
+      setTimeout(() => {
+        setError('');
+      }, 5000);
     } finally {
       setIsSubmitting(false);
     }
@@ -124,6 +188,19 @@ export default function Contact() {
                   particleColor="#ec4899"
                 />
               </motion.div>
+
+              {/* Error Message */}
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-2"
+                >
+                  <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                  <span className="text-sm">{error}</span>
+                </motion.div>
+              )}
 
               <motion.form
                 initial={{ opacity: 0, y: 20 }}

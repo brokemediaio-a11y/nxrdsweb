@@ -17,12 +17,15 @@ const GalaxyBackground = () => {
       const dpr = window.devicePixelRatio || 1;
       const rect = canvas.getBoundingClientRect();
       
+      // Reset any existing transforms before scaling to avoid compounding on mobile resize/scroll
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+
       // Set actual canvas size (accounting for device pixel ratio)
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
       
       // Scale context to account for device pixel ratio
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       
       // Set display size
       canvas.style.width = `${rect.width}px`;
@@ -128,8 +131,13 @@ const GalaxyBackground = () => {
     // Initialize particles with minimum spacing
     const initParticles = () => {
       particles = [];
-      // Stars: 40-50 total (+10 from previous 30-40)
-      const particleCount = Math.floor(Math.random() * 11 + 40); // 40-50
+      
+      // Check if mobile device (width < 768px)
+      const isMobile = window.innerWidth < 768;
+      
+      // Desktop: 40-50 stars, Mobile: 70-80 stars (30 more)
+      const baseCount = isMobile ? 70 : 40;
+      const particleCount = Math.floor(Math.random() * 11 + baseCount); // Desktop: 40-50, Mobile: 70-80
       
       let attempts = 0;
       const maxAttempts = particleCount * 10;
