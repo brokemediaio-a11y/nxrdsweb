@@ -1,4 +1,58 @@
-# React + TypeScript + Vite
+# Nexordis Website
+
+React + TypeScript + Vite application for Nexordis.
+
+## Environment Variables Setup
+
+### For Local Development
+
+Create a `.env` file in the project root with the following variables:
+
+```env
+VITE_EMAILJS_SERVICE_ID=your_service_id_here
+VITE_EMAILJS_TEMPLATE_ID=your_template_id_here
+VITE_EMAILJS_PUBLIC_KEY=your_public_key_here
+```
+
+### For Production Deployment on Hostinger
+
+**Important:** Vite embeds environment variables at **build time**, not runtime. You must set them before building.
+
+#### Option 1: Create .env file before building (Recommended)
+
+1. Create a `.env` file in your project root with your EmailJS credentials:
+   ```env
+   VITE_EMAILJS_SERVICE_ID=your_service_id_here
+   VITE_EMAILJS_TEMPLATE_ID=your_template_id_here
+   VITE_EMAILJS_PUBLIC_KEY=your_public_key_here
+   ```
+
+2. Build your project:
+   ```bash
+   npm run build
+   ```
+
+3. Upload the `dist` folder to Hostinger
+
+#### Option 2: Set environment variables in Hostinger (if supported)
+
+If Hostinger supports environment variables in their hosting panel:
+1. Set the variables in Hostinger's environment settings
+2. Build the project on Hostinger's server (if they support Node.js builds)
+3. Or build locally with the variables set, then upload
+
+#### Getting EmailJS Credentials
+
+1. Sign up at [EmailJS](https://www.emailjs.com/)
+2. Create an Email Service (Gmail, Outlook, etc.)
+3. Create Email Templates:
+   - Main template for notifications (to you)
+   - Auto-reply template (to users) - ID: `template_ewzlevo`
+4. Get your Public Key from Account > API Keys
+
+---
+
+## React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Linkedin, Twitter, Github, Instagram, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Instagram, Send } from 'lucide-react';
 import { useLenisContext } from '../../contexts/LenisContext';
 
 const Footer = () => {
@@ -90,10 +90,8 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: <Linkedin size={20} />, href: 'https://linkedin.com', name: 'LinkedIn' },
-    { icon: <Twitter size={20} />, href: 'https://twitter.com', name: 'Twitter' },
-    { icon: <Github size={20} />, href: 'https://github.com', name: 'GitHub' },
-    { icon: <Instagram size={20} />, href: 'https://instagram.com', name: 'Instagram' }
+    { icon: <Linkedin size={20} />, href: 'https://www.linkedin.com/company/nexordis/', name: 'LinkedIn' },
+    { icon: <Instagram size={20} />, href: 'https://www.instagram.com/nexordis_?igsh=dzM1MmhsbGp6NXFt&utm_source=qr', name: 'Instagram' }
   ];
 
   const scrollToSection = (href) => {
@@ -180,19 +178,20 @@ const Footer = () => {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px',
-                marginBottom: '8px'
+                marginBottom: '8px',
+                paddingTop: isMobile ? '8px' : '12px'
               }}
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
               <motion.img
-                src="/nexordis-logo-1.png"
-                alt="Nexordis Logo"
+                src="/complete%20logowithout%20background.png"
+                alt="NEXORDIS"
                 style={{
                   height: isMobile ? '40px' : '48px',
                   width: 'auto',
-                  filter: 'drop-shadow(0 0 10px rgba(236, 72, 153, 0.3))'
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 0 18px rgba(236,72,153,.55))'
                 }}
                 animate={{
                   filter: [
@@ -207,31 +206,6 @@ const Footer = () => {
                   ease: 'easeInOut'
                 }}
               />
-              <motion.span
-                style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontWeight: 600,
-                  fontSize: isMobile ? '1.25rem' : '1.5rem',
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  color: '#ffffff',
-                  textShadow: '0 0 10px rgba(236, 72, 153, 0.3)'
-                }}
-                animate={{
-                  textShadow: [
-                    '0 0 10px rgba(236, 72, 153, 0.3)',
-                    '0 0 15px rgba(244, 114, 182, 0.5)',
-                    '0 0 10px rgba(236, 72, 153, 0.3)'
-                  ]
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'easeInOut'
-                }}
-              >
-                NEXORDIS
-              </motion.span>
             </motion.div>
             
             <p style={{
@@ -378,7 +352,7 @@ const Footer = () => {
               marginBottom: '8px'
             }}>
               <motion.a
-                href="mailto:contact@nexordis.com"
+                href="mailto:connect@nexordis.com"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -398,11 +372,11 @@ const Footer = () => {
                 whileTap={{ scale: 0.98 }}
               >
                 <Mail size={isMobile ? 16 : 18} style={{ color: 'rgba(236, 72, 153, 0.8)', flexShrink: 0 }} />
-                <span style={{ lineHeight: '1.4' }}>contact@nexordis.com</span>
+                <span style={{ lineHeight: '1.4' }}>connect@nexordis.com</span>
               </motion.a>
 
               <motion.a
-                href="tel:+1234567890"
+                href="tel:+923306665546"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -422,7 +396,7 @@ const Footer = () => {
                 whileTap={{ scale: 0.98 }}
               >
                 <Phone size={isMobile ? 16 : 18} style={{ color: 'rgba(236, 72, 153, 0.8)', flexShrink: 0 }} />
-                <span style={{ lineHeight: '1.4' }}>+1 (234) 567-890</span>
+                <span style={{ lineHeight: '1.4' }}>+923306665546</span>
               </motion.a>
 
               <div style={{

@@ -10,6 +10,25 @@ const GalaxyBackground = () => {
     const ctx = canvas.getContext('2d');
     let animationFrameId;
     let particles = [];
+    let lastWidth = 0;
+    let lastHeight = 0;
+    let resizeTimeout;
+    let isScrolling = false;
+    let scrollTimeout;
+    const isMobile = window.innerWidth < 768;
+    
+    // Track scroll state to prevent resize during scroll
+    const handleScroll = () => {
+      isScrolling = true;
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        isScrolling = false;
+      }, 150);
+    };
+    
+    if (isMobile) {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+    }
 
     // Set canvas size to fill the hero section
     // Use device pixel ratio for crisp rendering
@@ -17,21 +36,49 @@ const GalaxyBackground = () => {
       const dpr = window.devicePixelRatio || 1;
       const rect = canvas.getBoundingClientRect();
       
+      // On mobile, use viewport dimensions to prevent resize glitches from browser UI
+      const targetWidth = isMobile ? window.innerWidth : rect.width;
+      const targetHeight = isMobile ? window.innerHeight : rect.height;
+      
+      // Only resize if dimensions actually changed (prevents unnecessary reinitialization)
+      if (Math.abs(targetWidth - lastWidth) < 1 && Math.abs(targetHeight - lastHeight) < 1) {
+        return;
+      }
+      
+      lastWidth = targetWidth;
+      lastHeight = targetHeight;
+      
       // Reset any existing transforms before scaling to avoid compounding on mobile resize/scroll
       ctx.setTransform(1, 0, 0, 1, 0, 0);
 
       // Set actual canvas size (accounting for device pixel ratio)
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+      canvas.width = targetWidth * dpr;
+      canvas.height = targetHeight * dpr;
       
       // Scale context to account for device pixel ratio
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       
       // Set display size
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
+      canvas.style.width = `${targetWidth}px`;
+      canvas.style.height = `${targetHeight}px`;
       
       initParticles();
+    };
+    
+    // Debounced resize handler for mobile to prevent constant reinitialization
+    const debouncedResize = () => {
+      // Don't resize if currently scrolling on mobile (prevents glitches)
+      if (isMobile && isScrolling) {
+        return;
+      }
+      
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Double-check we're not scrolling before resizing
+        if (!isMobile || !isScrolling) {
+          resizeCanvas();
+        }
+      }, isMobile ? 500 : 100); // Longer delay on mobile to wait for browser UI to settle
     };
 
     // Get display dimensions helper
@@ -181,12 +228,33 @@ const GalaxyBackground = () => {
     resizeCanvas();
     requestAnimationFrame(animate);
 
-    // Handle window resize
-    window.addEventListener('resize', resizeCanvas);
+    // Handle window resize with debouncing (especially important on mobile)
+    window.addEventListener('resize', debouncedResize);
+    
+    // Prevent touch events from interfering with canvas on mobile
+    if (isMobile) {
+      canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+      }, { passive: false });
+      canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+      }, { passive: false });
+      canvas.addEventListener('touchend', (e) => {
+        e.preventDefault();
+      }, { passive: false });
+    }
 
     // Cleanup
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      clearTimeout(resizeTimeout);
+      clearTimeout(scrollTimeout);
+      window.removeEventListener('resize', debouncedResize);
+      if (isMobile) {
+        window.removeEventListener('scroll', handleScroll);
+        canvas.removeEventListener('touchstart', () => {});
+        canvas.removeEventListener('touchmove', () => {});
+        canvas.removeEventListener('touchend', () => {});
+      }
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -204,8 +272,9 @@ const GalaxyBackground = () => {
           height: '100%',
           zIndex: 0,
           pointerEvents: 'none',
+          touchAction: 'none',
           // Lenis compatibility - prevent jitter
-          willChange: 'auto', // Change to 'auto' during scroll pause
+          willChange: 'auto',
           transform: 'translateZ(0)',
           WebkitTransform: 'translateZ(0)',
           backfaceVisibility: 'hidden',
@@ -214,6 +283,12 @@ const GalaxyBackground = () => {
           isolation: 'isolate',
           // Prevent repaint during scroll
           contain: 'layout style paint',
+          // Prevent mobile browser UI from affecting canvas
+          WebkitTouchCallout: 'none',
+          WebkitUserSelect: 'none',
+          userSelect: 'none',
+          // Prevent mobile scroll from affecting canvas
+          overscrollBehavior: 'none',
         }}
       />
     </>

@@ -865,7 +865,43 @@ canvas {
     height: 100vh !important;
     max-height: 100vh !important;
     overflow: hidden;
+    /* Prevent touch interactions from causing canvas glitches */
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    /* Prevent layout shifts during scroll */
+    contain: layout style paint;
+    will-change: auto;
   }
+  
+  /* Prevent canvas from being affected by touch events */
+  .hero canvas {
+    touch-action: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+  }
+  
+  /* Globe component optimizations for mobile - prevent flickering and page reloads */
+  #contact canvas,
+  canvas[style*="aspectRatio"] {
+    touch-action: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    will-change: auto !important;
+    contain: layout style paint !important;
+    isolation: isolate !important;
+    /* Prevent page reloads on mobile - make canvas non-interactive */
+    pointer-events: none !important;
+  }
+  
+  /* Contact section globe container - prevent layout shifts */
+  #contact article {
+    contain: layout style !important;
+    will-change: auto !important;
+    overflow: visible !important;
+  }
+  
   .hero-content {
     padding: 0 16px;
   }

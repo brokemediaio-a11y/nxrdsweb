@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import emailjs from '@emailjs/browser';
@@ -17,11 +18,23 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const [formRef, isInView] = useInView({ 
     once: true, 
     threshold: 0.1,
     rootMargin: '0px 0px -100px 0px'
   });
+
+  // Check EmailJS configuration on mount
+  React.useEffect(() => {
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+      setError('EmailJS configuration is missing. Please check your environment variables. For Hostinger: Create a .env file in your project root with VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, and VITE_EMAILJS_PUBLIC_KEY before building.');
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +50,12 @@ export default function Contact() {
 
       // Validate configuration
       if (!serviceId || !templateId || !publicKey) {
-        throw new Error('EmailJS configuration is missing. Please check your environment variables.');
+        throw new Error(
+          'EmailJS configuration is missing. ' +
+          'For production on Hostinger: Create a .env file in your project root with VITE_EMAILJS_SERVICE_ID, ' +
+          'VITE_EMAILJS_TEMPLATE_ID, and VITE_EMAILJS_PUBLIC_KEY, then rebuild and redeploy. ' +
+          'Environment variables must be set before running npm run build.'
+        );
       }
 
       // Prepare template parameters for notification email (to you)
@@ -128,37 +146,6 @@ export default function Contact() {
           'border-white/10 bg-white/5'
         )}>
           <div className="grid grid-cols-1 md:grid-cols-2">
-            {/* Globe Container - Second on Mobile, Second on Desktop */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="relative my-8 flex items-center justify-center overflow-hidden pr-8 order-2 md:order-2"
-            >
-              <div className="flex flex-col items-center justify-center overflow-hidden">
-                <article className={cn(
-                  'relative mx-auto h-[450px] min-h-72 max-w-[500px] overflow-hidden rounded-3xl',
-                  'p-8 text-3xl tracking-tight text-white',
-                  'md:h-[550px] md:min-h-96 md:p-10 md:text-4xl md:leading-[1.05] lg:text-5xl',
-                  'md:border md:border-white/20',
-                  'md:bg-gradient-to-b md:from-accent-pink md:to-accent-pink/5',
-                  'bg-transparent border-0'
-                )}>
-                  <div className="relative z-20 max-w-[280px] md:max-w-[350px]">
-                    Powering the Next Order of Digital Experiences
-                  </div>
-                  <div className="absolute -right-20 -bottom-20 z-10 mx-auto flex h-full w-full max-w-[300px] items-center justify-center transition-all duration-700 hover:scale-105 md:-right-28 md:-bottom-28 md:max-w-[550px]">
-                    <Earth
-                      scale={1.1}
-                      baseColor={[1, 0, 0.3]}
-                      markerColor={[0, 0, 0]}
-                      glowColor={[1, 0.3, 0.4]}
-                    />
-                  </div>
-                </article>
-              </div>
-            </motion.div>
-
             {/* Contact Form - First on Mobile, First on Desktop */}
             <div className="relative p-4 sm:p-6 md:p-10 order-1 md:order-1" ref={formRef} style={{ width: '100%', maxWidth: '100%' }}>
               <motion.div
@@ -327,6 +314,62 @@ export default function Contact() {
                 </motion.div>
               </motion.form>
             </div>
+
+            {/* Globe Container - Second on Mobile, Second on Desktop */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="relative my-8 flex items-center justify-center order-2 md:order-2"
+              style={{
+                overflow: 'visible',
+              }}
+            >
+              <div className="flex flex-col items-center justify-center w-full">
+                <article className={cn(
+                  'relative mx-auto h-[450px] min-h-72 w-full max-w-[500px] rounded-3xl',
+                  'p-6 md:p-8 text-2xl md:text-3xl tracking-tight text-white',
+                  'md:h-[550px] md:min-h-96 md:p-10 md:text-4xl md:leading-[1.05] lg:text-5xl',
+                  'md:border md:border-white/20',
+                  'md:bg-gradient-to-b md:from-accent-pink md:to-accent-pink/5',
+                  'bg-transparent border-0',
+                  'overflow-hidden'
+                )}>
+                  <div 
+                    className="relative z-20"
+                    style={{ 
+                      maxWidth: isMobile ? '55%' : '280px',
+                      paddingRight: isMobile ? '0' : '0',
+                      fontSize: '32px',
+                      fontFamily: '"Lemon Milk", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif',
+                    }}
+                  >
+                    Powering the Next Order of Digital Experiences
+                  </div>
+                  <div 
+                    className="absolute z-10 flex items-center justify-center"
+                    style={{
+                      // Position on right side, slightly cropped on mobile (like the image)
+                      right: isMobile ? '-15%' : '16px',
+                      bottom: isMobile ? '-20%' : 'auto',
+                      top: isMobile ? 'auto' : '50%',
+                      transform: isMobile 
+                        ? 'rotate(12deg)' 
+                        : 'translateY(-50%) rotate(12deg)',
+                      width: isMobile ? '380px' : '400px',
+                      height: isMobile ? '380px' : '400px',
+                    }}
+                  >
+                    <Earth
+                      scale={1.2}
+                      baseColor={[1, 0, 0.3]}
+                      markerColor={[0, 0, 0]}
+                      glowColor={[1, 0.3, 0.4]}
+                    />
+                  </div>
+                </article>
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>

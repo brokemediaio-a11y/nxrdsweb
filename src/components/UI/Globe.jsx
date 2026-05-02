@@ -16,181 +16,103 @@ const Earth = ({
 }) => {
   const canvasRef = useRef(null);
   const globeRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const phiRef = useRef(0);
+  const isVisibleRef = useRef(true);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Detect mobile and visibility
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Intersection Observer for visibility-based rendering
   useEffect(() => {
     if (!canvasRef.current) return;
+    if (globeRef.current) return;
 
+    const canvas = canvasRef.current;
+
+    const getWidth = () => {
+      if (canvas.offsetWidth > 0) return canvas.offsetWidth;
+      const parent = canvas.parentElement;
+      if (parent && parent.offsetWidth > 0) return Math.min(parent.offsetWidth, 400);
+      return 400;
+    };
+
+    let width = getWidth();
+    if (width < 100) width = 400;
+
+    const mobileMapSamples = isMobile ? Math.min(5000, mapSamples) : mapSamples;
+    const dpr = isMobile ? 1 : 2;
+    const mobileMapBrightness = isMobile ? Math.min(3, mapBrightness) : mapBrightness;
+
+    try {
+      const globe = createGlobe(canvas, {
+        devicePixelRatio: dpr,
+        width: width * dpr,
+        height: width * dpr,
+        phi: 0,
+        theta,
+        dark,
+        scale,
+        diffuse,
+        mapSamples: mobileMapSamples,
+        mapBrightness: mobileMapBrightness,
+        baseColor,
+        markerColor,
+        glowColor,
+        opacity: 1,
+        offset: [0, 0],
+        markers: [],
+        onRender: (state) => {
+          // ✅ Always increment phi to keep animation state alive
+          // even when not visible — prevents the "restart" delay
+          phiRef.current += 0.003;
+          state.phi = phiRef.current;
+
+          // ✅ Skip actual rendering work when off-screen
+          // by returning early only AFTER updating phi
+          if (!isVisibleRef.current) {
+            state.phi = phiRef.current;
+          }
+        },
+      });
+
+      globeRef.current = globe;
+    } catch (error) {
+      console.error('Error initializing globe:', error);
+    }
+
+    // ✅ IntersectionObserver: track visibility without destroying the globe
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          setIsVisible(entry.isIntersecting);
+          isVisibleRef.current = entry.isIntersecting;
         });
       },
       {
-        threshold: 0.1,
-        rootMargin: '50px',
+        // ✅ Use a negative rootMargin to start rendering BEFORE
+        // the element scrolls into view — eliminates the visible delay
+        rootMargin: '200px 0px 200px 0px',
+        threshold: 0,
       }
     );
 
-    const canvas = canvasRef.current;
     observer.observe(canvas);
-    
-    // Check if already visible on mount
-    const rect = canvas.getBoundingClientRect();
-    const isCurrentlyVisible = 
-      rect.top < window.innerHeight + 50 &&
-      rect.bottom > -50 &&
-      rect.left < window.innerWidth + 50 &&
-      rect.right > -50;
-    
-    if (isCurrentlyVisible) {
-      setIsVisible(true);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!canvasRef.current) return;
-
-    // Only create globe when visible to save resources
-    if (!isVisible) {
-      // Clean up if not visible
-      if (globeRef.current) {
-        try {
-          globeRef.current.destroy();
-        } catch (e) {
-          console.warn('Error destroying globe:', e);
-        }
-        globeRef.current = null;
-      }
-      return;
-    }
-
-    // Wait for canvas to be properly sized
-    const initializeGlobe = () => {
-      const canvas = canvasRef.current;
-      if (!canvas || !isVisible) return;
-
-      // Get actual width with fallback
-      const getWidth = () => {
-        if (canvas.offsetWidth > 0) return canvas.offsetWidth;
-        // Fallback: check parent or use default
-        const parent = canvas.parentElement;
-        if (parent && parent.offsetWidth > 0) return Math.min(parent.offsetWidth, 350);
-        return 300; // Safe default
-      };
-
-      let width = getWidth();
-      
-      // Mobile optimizations - significantly reduce quality on mobile
-      const mobileMapSamples = isMobile ? Math.min(8000, mapSamples) : mapSamples;
-      const devicePixelRatio = isMobile ? 1 : 2; // Reduce DPR on mobile (1x instead of 2x = 4x less pixels)
-      const mobileMapBrightness = isMobile ? Math.min(4, mapBrightness) : mapBrightness;
-
-      // Ensure minimum width
-      if (width < 100) {
-        width = 100;
-      }
-
-      try {
-        // Destroy existing globe if any
-        if (globeRef.current) {
-          globeRef.current.destroy();
-          globeRef.current = null;
-        }
-
-        let phi = 0;
-
-        const globe = createGlobe(canvas, {
-          devicePixelRatio: devicePixelRatio,
-          width: width * devicePixelRatio,
-          height: width * devicePixelRatio,
-          phi: 0,
-          theta: theta,
-          dark: dark,
-          scale: scale,
-          diffuse: diffuse,
-          mapSamples: mobileMapSamples,
-          mapBrightness: mobileMapBrightness,
-          baseColor: baseColor,
-          markerColor: markerColor,
-          glowColor: glowColor,
-          opacity: 1,
-          offset: [0, 0],
-          markers: [],
-          onRender: (state) => {
-            // Only animate when visible
-            if (isVisible) {
-              state.phi = phi;
-              phi += 0.003;
-            }
-          },
-        });
-
-        globeRef.current = globe;
-      } catch (error) {
-        console.error('Error initializing globe:', error);
-      }
-    };
-
-    // Delay initialization to ensure DOM is ready and visible
-    const timeoutId = setTimeout(() => {
-      if (isVisible) {
-        initializeGlobe();
-      }
-    }, 150);
-
-    // Handle resize
-    const handleResize = () => {
-      if (!isVisible) return;
-      
-      if (globeRef.current && canvasRef.current) {
-        const width = canvasRef.current.offsetWidth || 300;
-        if (width > 0) {
-          try {
-            globeRef.current.destroy();
-            globeRef.current = null;
-            setTimeout(() => {
-              if (isVisible) {
-                initializeGlobe();
-              }
-            }, 50);
-          } catch (e) {
-            console.warn('Error during resize:', e);
-          }
-        }
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
 
     return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener('resize', handleResize);
+      observer.disconnect();
       if (globeRef.current) {
         try {
           globeRef.current.destroy();
         } catch (e) {
-          console.warn('Error destroying globe on cleanup:', e);
+          console.warn('Globe destroy error:', e);
         }
         globeRef.current = null;
       }
     };
-  }, [theta, dark, scale, diffuse, mapSamples, mapBrightness, baseColor, markerColor, glowColor, isMobile, isVisible]);
+  }, []);
 
   return (
     <div
@@ -198,6 +120,9 @@ const Earth = ({
         'flex items-center justify-center z-[10] w-full max-w-[350px] mx-auto',
         className
       )}
+      // ✅ Critical: prevents browser from discarding the element's
+      // rendering context when scrolled out of view
+      style={{ contentVisibility: 'visible' }}
     >
       <canvas
         ref={canvasRef}
@@ -206,6 +131,22 @@ const Earth = ({
           height: '100%',
           maxWidth: '100%',
           aspectRatio: '1',
+          touchAction: 'none',
+          pointerEvents: 'none',
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          display: 'block',
+          // ✅ Removed willChange: 'auto' — use 'transform' to keep
+          // the element in its own compositing layer at all times
+          willChange: 'transform',
+          transform: 'translateZ(0)',
+          WebkitTransform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          // ✅ Never let the browser hide this canvas
+          visibility: 'visible',
+          opacity: 1,
+          contain: 'strict',
         }}
       />
     </div>
