@@ -19,6 +19,7 @@ import AboutUs from './components/Sections/AboutUs';
 import Contact from './components/Sections/Contact';
 // @ts-ignore
 import TechStack from './components/Sections/TechStack';
+import VoiceWidget from './components/voice-agent/VoiceWidget';
 
 function App() {
 
@@ -74,6 +75,7 @@ function App() {
           </Layout>
         </motion.div>
       </div>
+      <VoiceWidget />
     </LenisProvider>
   );
 }

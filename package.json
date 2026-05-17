@@ -27,6 +27,7 @@
     "react-parallax": "^3.5.2",
     "react-scroll-parallax": "^3.5.0",
     "react-spring": "^10.0.3",
+    "retell-client-js-sdk": "^2.0.7",
     "three": "^0.182.0"
   },
   "devDependencies": {
