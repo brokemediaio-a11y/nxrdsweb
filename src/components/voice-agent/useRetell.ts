@@ -4,6 +4,18 @@ import { RetellWebClient } from 'retell-client-js-sdk';
 export type CallStatus = 'idle' | 'connecting' | 'active' | 'ended' | 'error';
 export type SpeakingState = 'idle' | 'agent_speaking' | 'user_speaking';
 
+// Subset of form fields sent to the n8n webhook so it can create the call
+// and log context on the server side. Matches PreCallFormData field names.
+export interface CallFormData {
+  caller_name: string;
+  business_name: string;
+  industry: string;
+  weekly_call_volume: string;
+  pain_point: string[];
+  current_setup: string;
+  call_goal: string;
+}
+
 interface TranscriptEntry {
   role: 'agent' | 'user';
   content: string;
@@ -14,13 +26,12 @@ interface UseRetellReturn {
   speakingState: SpeakingState;
   isMuted: boolean;
   transcript: TranscriptEntry[];
-  startCall: () => Promise<void>;
+  startCall: (formData: CallFormData) => Promise<void>;
   endCall: () => void;
   toggleMute: () => void;
 }
 
-const RETELL_API_KEY = 'key_bbe8fdd9b7295c1562644d46bdae';
-const AGENT_ID = 'agent_64210c6dcd7b46788e935a2f4c';
+const N8N_WEBHOOK_URL = 'https://n8n.brokemediaio.com/webhook/start-precall-demo';
 
 export function useRetell(): UseRetellReturn {
   const [callStatus, setCallStatus] = useState<CallStatus>('idle');
@@ -73,7 +84,7 @@ export function useRetell(): UseRetellReturn {
     };
   }, []);
 
-  const startCall = useCallback(async () => {
+  const startCall = useCallback(async (formData: CallFormData) => {
     if (!clientRef.current) return;
 
     setCallStatus('connecting');
@@ -81,19 +92,22 @@ export function useRetell(): UseRetellReturn {
     setIsMuted(false);
 
     try {
-      const response = await fetch('https://api.retellai.com/v2/create-web-call', {
+      const response = await fetch(N8N_WEBHOOK_URL, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${RETELL_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          agent_id: AGENT_ID,
+          caller_name:        formData.caller_name,
+          business_name:      formData.business_name,
+          industry:           formData.industry,
+          weekly_call_volume: formData.weekly_call_volume,
+          pain_point:         formData.pain_point,
+          current_setup:      formData.current_setup,
+          call_goal:          formData.call_goal,
         }),
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to create web call: ${response.status}`);
+        throw new Error(`Webhook error: ${response.status}`);
       }
 
       const data = await response.json();

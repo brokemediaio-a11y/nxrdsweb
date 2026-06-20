@@ -1,8 +1,9 @@
-import React, { useState, memo } from 'react';
+import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import VoiceModal from './VoiceModal';
-import { useRetell } from './useRetell';
+import PreCallForm, { type PreCallFormData } from './PreCallForm';
+import { useRetell, type CallFormData } from './useRetell';
 
 const PhoneCallIcon = () => (
   <svg
@@ -21,7 +22,12 @@ const PhoneCallIcon = () => (
 );
 
 const VoiceWidget: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  // showForm: pre-call intake form is open
+  // showCall: voice call modal is open
+  const [showForm, setShowForm] = useState(false);
+  const [showCall, setShowCall] = useState(false);
+  // Keep the last submitted form data so VoiceModal can re-trigger the call if needed
+  const lastFormData = useRef<CallFormData | null>(null);
 
   const {
     callStatus,
@@ -33,20 +39,52 @@ const VoiceWidget: React.FC = () => {
     toggleMute,
   } = useRetell();
 
-  const handleOpen = () => setIsOpen(true);
-
-  const handleClose = () => {
-    if (callStatus === 'active' || callStatus === 'connecting') {
-      endCall();
+  // Once call becomes active, close the form and open the call UI
+  useEffect(() => {
+    if (callStatus === 'active' && showForm) {
+      setShowForm(false);
+      setShowCall(true);
     }
-    setIsOpen(false);
-  };
+  }, [callStatus, showForm]);
+
+  // If call errors while form is open, keep form visible so user sees the error state
+  // (PreCallForm watches callStatus === 'error' via the connecting→error transition)
+
+  const handleFloatingClick = useCallback(() => {
+    setShowForm(true);
+  }, []);
+
+  // Called by PreCallForm once Sheets write is confirmed — start the call via n8n
+  const handleFormSubmit = useCallback(async (data: PreCallFormData) => {
+    lastFormData.current = data;
+    await startCall(data);
+  }, [startCall]);
+
+  // Used by VoiceModal's "Start Call" button — reuses the last submitted form data
+  const handleModalStartCall = useCallback(async () => {
+    if (lastFormData.current) {
+      await startCall(lastFormData.current);
+    }
+  }, [startCall]);
+
+  const handleFormClose = useCallback(() => {
+    // If already connecting when user closes, end the call attempt too
+    if (callStatus === 'connecting') endCall();
+    setShowForm(false);
+  }, [callStatus, endCall]);
+
+  const handleCallClose = useCallback(() => {
+    if (callStatus === 'active' || callStatus === 'connecting') endCall();
+    setShowCall(false);
+  }, [callStatus, endCall]);
+
+  const isAnyModalOpen = showForm || showCall;
 
   return (
     <>
-      {/* Floating button */}
+      {/* Floating pill button — hidden while any modal is open */}
       <AnimatePresence>
-        {!isOpen && (
+        {!isAnyModalOpen && (
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -67,11 +105,10 @@ const VoiceWidget: React.FC = () => {
                 position: 'absolute',
                 inset: -6,
                 borderRadius: '50%',
-                border: '1px solid rgba(236, 72, 153, 0.45)',
+                border: '1px solid rgba(236,72,153,0.45)',
                 pointerEvents: 'none',
               }}
             />
-
             {/* Pulse ring 2 */}
             <motion.div
               animate={{ scale: [1, 1.35, 1.55], opacity: [0.25, 0.1, 0] }}
@@ -80,17 +117,16 @@ const VoiceWidget: React.FC = () => {
                 position: 'absolute',
                 inset: -6,
                 borderRadius: '50%',
-                border: '1px solid rgba(217, 70, 239, 0.3)',
+                border: '1px solid rgba(217,70,239,0.3)',
                 pointerEvents: 'none',
               }}
             />
 
-            {/* Main button */}
             <motion.button
-              onClick={handleOpen}
+              onClick={handleFloatingClick}
               whileHover={{
                 scale: 1.1,
-                boxShadow: '0 0 50px rgba(236, 72, 153, 0.4), 0 0 90px rgba(217, 70, 239, 0.18)',
+                boxShadow: '0 0 50px rgba(236,72,153,0.4), 0 0 90px rgba(217,70,239,0.18)',
               }}
               whileTap={{ scale: 0.93 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -99,51 +135,55 @@ const VoiceWidget: React.FC = () => {
                 width: 60,
                 height: 60,
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.22) 0%, rgba(217, 70, 239, 0.16) 50%, rgba(138, 43, 226, 0.22) 100%)',
-                border: '1px solid rgba(236, 72, 153, 0.35)',
+                background: 'linear-gradient(135deg, rgba(236,72,153,0.22) 0%, rgba(217,70,239,0.16) 50%, rgba(138,43,226,0.22) 100%)',
+                border: '1px solid rgba(236,72,153,0.35)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
-                boxShadow: '0 0 32px rgba(236, 72, 153, 0.22), 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.08)',
+                boxShadow: '0 0 32px rgba(236,72,153,0.22), 0 8px 32px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.08)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: 'rgba(255, 255, 255, 0.92)',
+                color: 'rgba(255,255,255,0.92)',
                 overflow: 'hidden',
               }}
-              aria-label="Open AI Voice Assistant"
+              aria-label="Talk to our Voice AI Agent"
             >
-              {/* Shimmer sweep */}
               <motion.div
                 animate={{ x: ['-100%', '200%'] }}
                 transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: 'easeInOut' }}
                 style={{
                   position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '50%',
-                  height: '100%',
-                  background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent)',
+                  top: 0, left: 0,
+                  width: '50%', height: '100%',
+                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)',
                   pointerEvents: 'none',
                 }}
               />
-
               <PhoneCallIcon />
             </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Voice Modal via portal */}
+      {/* Pre-call intake form */}
+      <PreCallForm
+        isOpen={showForm}
+        callStatus={callStatus}
+        onClose={handleFormClose}
+        onSubmit={handleFormSubmit}
+      />
+
+      {/* Voice call modal (rendered via portal inside PreCallForm already; VoiceModal here separately) */}
       {createPortal(
         <VoiceModal
-          isOpen={isOpen}
-          onClose={handleClose}
+          isOpen={showCall}
+          onClose={handleCallClose}
           callStatus={callStatus}
           speakingState={speakingState}
           isMuted={isMuted}
           transcript={transcript}
-          onStartCall={startCall}
+          onStartCall={handleModalStartCall}
           onEndCall={endCall}
           onToggleMute={toggleMute}
         />,
