@@ -230,8 +230,8 @@ const errorStyle: React.CSSProperties = {
 
 const stepVariants = {
   enter: (dir: number) => ({ x: dir * 55, opacity: 0 }),
-  center: { x: 0, opacity: 1, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } },
-  exit: (dir: number) => ({ x: dir * -55, opacity: 0, transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } }),
+  center: { x: 0, opacity: 1, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
+  exit: (dir: number) => ({ x: dir * -55, opacity: 0, transition: { duration: 0.18, ease: [0.4, 0, 1, 1] as [number, number, number, number] } }),
 };
 
 // ─── Focus-enhanced input wrapper ──────────────────────────────────────────
