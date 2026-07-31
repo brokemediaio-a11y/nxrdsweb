@@ -335,9 +335,23 @@ export default function Contact() {
                   'bg-transparent border-0',
                   'overflow-hidden'
                 )}>
-                  <div 
+                  {/* Ambient glow — blends the globe into the card instead of it reading as a separate box */}
+                  <div
+                    className="absolute z-0 pointer-events-none"
+                    style={{
+                      right: isMobile ? '-25%' : '-5%',
+                      bottom: isMobile ? '-30%' : 'auto',
+                      top: isMobile ? 'auto' : '50%',
+                      transform: isMobile ? 'none' : 'translateY(-50%)',
+                      width: isMobile ? '480px' : '520px',
+                      height: isMobile ? '480px' : '520px',
+                      background: 'radial-gradient(circle at center, rgba(236,72,153,0.35), rgba(236,72,153,0.12) 45%, transparent 70%)',
+                      filter: 'blur(40px)',
+                    }}
+                  />
+                  <div
                     className="relative z-20"
-                    style={{ 
+                    style={{
                       maxWidth: isMobile ? '55%' : '280px',
                       paddingRight: isMobile ? '0' : '0',
                       fontSize: '32px',
@@ -346,7 +360,7 @@ export default function Contact() {
                   >
                     Powering the Next Order of Digital Experiences
                   </div>
-                  <div 
+                  <div
                     className="absolute z-10 flex items-center justify-center"
                     style={{
                       // Position on right side, slightly cropped on mobile (like the image)

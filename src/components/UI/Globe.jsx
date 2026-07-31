@@ -114,6 +114,12 @@ const Earth = ({
     };
   }, []);
 
+  // ✅ Soft radial fade so the canvas's own square edge never reads as a
+  // hard rectangle — the WebGL glow's alpha doesn't reach 0 before the
+  // box boundary, so we finish the fade with a CSS mask instead.
+  const edgeFadeMask =
+    'radial-gradient(circle closest-side, #000 60%, rgba(0,0,0,0.35) 80%, transparent 100%)';
+
   return (
     <div
       className={cn(
@@ -122,7 +128,11 @@ const Earth = ({
       )}
       // ✅ Critical: prevents browser from discarding the element's
       // rendering context when scrolled out of view
-      style={{ contentVisibility: 'visible' }}
+      style={{
+        contentVisibility: 'visible',
+        WebkitMaskImage: edgeFadeMask,
+        maskImage: edgeFadeMask,
+      }}
     >
       <canvas
         ref={canvasRef}
@@ -136,6 +146,7 @@ const Earth = ({
           userSelect: 'none',
           WebkitUserSelect: 'none',
           display: 'block',
+          background: 'transparent',
           // ✅ Removed willChange: 'auto' — use 'transform' to keep
           // the element in its own compositing layer at all times
           willChange: 'transform',
