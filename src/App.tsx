@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { LenisProvider } from './contexts/LenisContext';
 // @ts-ignore
@@ -20,27 +21,22 @@ import Contact from './components/Sections/Contact';
 // @ts-ignore
 import TechStack from './components/Sections/TechStack';
 import VoiceWidget from './components/voice-agent/VoiceWidget';
+import CallPage from './pages/CallPage';
 
-function App() {
-
+function HomePage() {
   useEffect(() => {
-    // Initialize reveal animations - make all elements visible immediately
     const initReveal = () => {
       const revealElements = document.querySelectorAll('.reveal');
-      
       if (revealElements.length === 0) return;
-      
-      // Immediately show ALL elements - elements are visible by default in CSS
       revealElements.forEach((el) => {
         el.classList.add('show');
       });
     };
 
-    // Run immediately and after React renders
     initReveal();
     const timer1 = setTimeout(initReveal, 100);
     const timer2 = setTimeout(initReveal, 300);
-    
+
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
@@ -49,7 +45,6 @@ function App() {
 
   return (
     <LenisProvider>
-      {/* Navbar uses portal to render in document.body but needs Lenis context for scrollTo */}
       <Navbar />
       <div style={{ position: 'relative', zIndex: 1 }}>
         <motion.div
@@ -77,6 +72,15 @@ function App() {
       </div>
       <VoiceWidget />
     </LenisProvider>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/call" element={<CallPage />} />
+    </Routes>
   );
 }
 
