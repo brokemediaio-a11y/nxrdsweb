@@ -10,6 +10,7 @@ export interface CallFormData {
   caller_name: string;
   business_name: string;
   industry: string;
+  industry_other: string;
   weekly_call_volume: string;
   pain_point: string[];
   current_setup: string;
@@ -99,6 +100,7 @@ export function useRetell(): UseRetellReturn {
           caller_name:        formData.caller_name,
           business_name:      formData.business_name,
           industry:           formData.industry,
+          industry_other:     formData.industry_other,
           weekly_call_volume: formData.weekly_call_volume,
           pain_point:         formData.pain_point,
           current_setup:      formData.current_setup,
